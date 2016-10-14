@@ -1,2 +1,2 @@
-# renanzapelini.github.io
+# renansj.github.io
 Just a little website
