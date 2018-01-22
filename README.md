@@ -1,2 +1,1 @@
-# renansj.github.io
-Just a little website
+This is a portfolio.
