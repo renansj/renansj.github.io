@@ -1,7 +1,6 @@
 ---
 layout: page
 title: About
-permalink: /about/
 ---
 
 Hello there! My name is Renan Zapelini, and I'm a passionate Software Engineer and Application Security Engineer. With a keen interest in web application security, I dedicate a significant amount of my time to studying and exploring this fascinating field. I believe that ensuring the security of web applications is crucial in today's interconnected world.
