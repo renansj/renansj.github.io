@@ -16,7 +16,8 @@ const programmingLanguages = {
 Object.prototype.bestOne = "Haskell";
 ```
 
-![Javascript prototype](./Prototype.png "Javascript prototype")
+![image](https://github.com/renansj/renansj.github.io/assets/5496098/e049486c-ff7e-4487-b18e-9f78b710ed07)
+
 
 In this example, the `programmingLanguages` object initially only has the properties `coolOne` and `godHelpMe`. However, we then utilize the Object prototype to add another property, `bestOne`, which is inherited by `programmingLanguages` even after its creation. This mechanism is not limited to properties alone; it also applies to functions. In the previous example, if we try to access the `bestOne` property within the `programmingLanguages` object, it will have inherited this property:
 
@@ -87,7 +88,8 @@ In fact, we can access the `/admin` endpoint by polluting the payload received i
 
 This payload will pollute the user object due to the line `lodash.merge(address, req.body);`. When the function runs, it recursively merges the payload's body, even hitting the `Object.prototype`, and it will be inherited by all derived objects. Therefore, the user object will now have the isAdmin property set to true, and if you try to request the `/admin` endpoint, the flag will be returned.
 
-![Javascript prototype](./Malicious_payload.png "Javascript prototype")
+![image](https://github.com/renansj/renansj.github.io/assets/5496098/1873c103-0500-4bdb-b4f1-4678c7c56ae2)
+
 
 So, this is an example of privilege escalation using prototype pollution. However, you can also cause unavailability of the target by overwriting the `toString` function, for example:
 
