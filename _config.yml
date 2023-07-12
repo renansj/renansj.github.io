@@ -27,6 +27,15 @@ plugins:
   - jekyll-paginate
   - jekyll-sitemap
 
+webrick:
+  headers:
+    X-Frame-Options: "DENY"
+    X-XSS-Protection: "1; mode=block"
+    Content-Security-Policy: "form-action 'self' https: *.r0z.me"
+    Referrer-Policy: "strict-origin-when-cross-origin"
+    Strict-Transport-Security: "max-age=2592000"
+    Feature-Policy: "vibrate 'none'; geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment 'none'"
+
 # Custom variables
 owner : "Renan Zapelini"
 year : "2023"
