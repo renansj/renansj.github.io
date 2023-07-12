@@ -1,11 +1,40 @@
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-  <meta name="generator" content="Jekyll">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1"
+  />
+  <meta name="generator" content="Jekyll" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="form-action 'self' https: *.r0z.me"
+  />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Strict-Transport-Security" content="max-age=2592000" />
+  <meta
+    http-equiv="Feature-Policy"
+    content="vibrate 'none'; geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment 'none'"
+  />
+  <meta
+    http-equiv="Permissions-Policy"
+    content="geolocation=(), camera=(), microphone=()"
+  />
 
-  <title>{%if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <title>
+    {%if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}
+  </title>
 
-  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}">
-  
-  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> {% seo %}
+  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl |
+  replace: '//', '/' }}">
+
+  <link
+    href="/atom.xml"
+    type="application/atom+xml"
+    rel="alternate"
+    title="ATOM Feed"
+  />
+  {% seo %}
 </head>
