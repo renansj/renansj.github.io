@@ -3,12 +3,12 @@ layout: page
 title: About
 ---
 
-Hello there! My name is Renan Zapelini, and I'm a passionate Software Engineer and Application Security Engineer. With a keen interest in web application security, I dedicate a significant amount of my time to studying and exploring this fascinating field. I believe that ensuring the security of web applications is crucial in today's interconnected world.
+Hey, I’m Renan Zapelini, Software Engineer and Application Security Engineer. I spend a lot of my time breaking things (the right way) and figuring out how they really work. For me, security isn’t just a job, it’s about understanding systems at their core and making them stronger.
 
-Aside from my professional work, I also engage in bug bounty programs as an occasional hobby. It's exhilarating to uncover vulnerabilities and contribute to making the digital landscape safer for everyone. This bug hunting journey has allowed me to continuously refine my skills and stay up-to-date with the latest security trends.
+Every now and then, I jump into bug bounty hunting. There’s nothing like the thrill of finding a vulnerability that everyone else missed and turning it into something that actually helps secure the internet. It’s the perfect mix of curiosity, persistence, and a bit of chaos.
 
-However, my interests don't end there. I am also deeply enthusiastic about mathematics and functional programming. Exploring the elegance and precision of mathematical concepts and applying them to create robust and efficient software solutions brings me immense satisfaction.
+I’m also really into mathematics and functional programming. Clean logic, solid reasoning, elegant solutions. That’s the kind of stuff that makes good code great. It’s not about reinventing the wheel, it’s about understanding how the wheel spins.
 
-Through my blog, I aim to share my knowledge, insights, and experiences in these areas. Join me as we delve into the world of application security, discuss the nuances of bug bounty hunting, unravel the beauty of mathematics, and explore the power of functional programming. Together, let's unlock the potential of secure and elegant software.
+This space is where I drop what I learn. Security tricks, bug bounty war stories, math ideas that actually matter in code, and functional programming experiments. No fluff. Just real stuff.
 
-Feel free to connect with me, exchange ideas, or collaborate on exciting projects. Let's make the digital realm a safer and more creative space!
+If you’re into hacking, security, or just enjoy taking systems apart and putting them back together better than before, let’s talk. I’m always down to share ideas, learn something new, or build something cool.
