@@ -17,7 +17,13 @@ body {
   background: $body-background url("../assets/bkg.png") 0 0;
   color: $body-foreground;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
+}
+
+/* Monospace only for code and headers */
+h1, h2, h3, h4, h5, h6,
+header, pre, code {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
@@ -235,14 +241,51 @@ hr {
 */
 
 a {
-  color: #63c0f5;
-  text-shadow: 0 0 5px rgba(104, 182, 255, 0.5);
+  color: #7fd4ff;
+  text-shadow: 0 0 5px rgba(104, 182, 255, 0.3);
+}
+
+a:hover {
+  color: #b5e8ff;
 }
 
 a:active, a:focus {
   outline: 0;
   border: none;
   -moz-outline-style: none
+}
+
+/* Post date styling */
+time, .post-date {
+  display: block;
+  color: $grey;
+  font-size: 14px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  margin: -10px 0 20px 0;
+}
+
+/* Tags */
+.post-tags {
+  margin: 5px 0 15px 0;
+}
+
+.tag {
+  display: inline-block;
+  background: rgba(181, 232, 83, 0.1);
+  border: 1px solid rgba(181, 232, 83, 0.3);
+  color: $conifer;
+  font-size: 12px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-right: 5px;
+  text-decoration: none;
+}
+
+.tag:hover {
+  background: rgba(181, 232, 83, 0.2);
+  border-color: rgba(181, 232, 83, 0.6);
+  text-shadow: none;
 }
 
 /* Clearfix */

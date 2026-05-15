@@ -1,7 +1,7 @@
 ---
 title: "Race Condition em APIs .NET: do conceito à exploração"
 published: true
-tags: PT-BR
+tags: [race-condition, dotnet, web]
 ---
 
 ## O que é uma race condition?
