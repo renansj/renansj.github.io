@@ -1,10 +1,11 @@
 title: R0Z
 description: "R0Z Blog"
+url: "https://renansj.dev"
 author:
   name: "R0Z"
   url: "https://renansj.dev"
 
-baseurl: /
+baseurl: ""
 
 source: .
 destination: ./_site
