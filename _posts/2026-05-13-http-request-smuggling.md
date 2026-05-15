@@ -1,14 +1,14 @@
 ---
-title: "HTTP Request Smuggling: Contrabandeando Requisições na Frente do Proxy"
+title: "HTTP Request Smuggling: Explorando Desync entre Proxy e Backend"
 published: true
 tags: [request-smuggling, web, http]
 ---
 
-# HTTP Request Smuggling: Contrabandeando Requisições na Frente do Proxy
+# HTTP Request Smuggling: Explorando Desync entre Proxy e Backend
 
 ## Introdução
 
-Em 2005, Watchfire publicou um paper chamado **"HTTP Request Smuggling"** que descrevia uma classe de vulnerabilidade que, na época, pouca gente levou a sério. A ideia era simples e elegante: se dois componentes HTTP (um proxy e um backend) discordam sobre onde uma requisição termina e a próxima começa, um atacante pode "contrabandear" uma requisição dentro de outra. O proxy vê uma coisa, o backend vê outra. O resultado é devastador.
+Em 2005, Watchfire publicou um paper chamado **"HTTP Request Smuggling"** que descrevia uma classe de vulnerabilidade que, na época, pouca gente levou a sério. A ideia era simples e elegante: se dois componentes HTTP (um proxy e um backend) discordam sobre onde uma requisição termina e a próxima começa, um atacante pode "smuggle" uma requisição dentro de outra. O proxy vê uma coisa, o backend vê outra. O resultado é devastador.
 
 Esse paper ficou meio esquecido por mais de uma década. Aí em 2019, James Kettle (do PortSwigger) apresentou na DEF CON 27 a talk **"HTTP Desync Attacks: Smashing into the Cell Next Door"** e basicamente ressuscitou essa classe de vulnerabilidade. Ele mostrou que request smuggling não era só um problema teórico, era explorável em produção, em infraestruturas reais, com impacto crítico. Depois, em 2023, ele foi além com **"Smashing the State Machine: The True Potential of Web Race Conditions"** na DEF CON 31, onde expandiu o conceito de desync para race conditions em single-packet attacks, mostrando que a dessincronização entre componentes é um problema muito mais amplo do que se imaginava.
 
@@ -165,7 +165,7 @@ O backend lê apenas 4 bytes de body (o valor de Content-Length). Os bytes resta
 └──────────────────────────────────────────────────────────┘
 ```
 
-Isso é o **desync**: proxy e backend estão dessincronizados sobre o estado da conexão. O proxy acha que processou uma requisição. O backend processou duas. A segunda requisição foi "contrabandeada" (smuggled) pelo atacante.
+Isso é o **desync**: proxy e backend estão dessincronizados sobre o estado da conexão. O proxy acha que processou uma requisição. O backend processou duas. A segunda requisição foi smuggled pelo atacante.
 
 ---
 
@@ -451,7 +451,7 @@ Isso começa com `GET /admin HTTP/1.1`, uma requisição HTTP válida! O backend
 [BACKEND] GET /admin (CL=-1, TE=none, body=0 bytes)
 ```
 
-Duas requisições processadas a partir de um único envio TCP. O backend não tem como saber que o `GET /admin` foi contrabandeado. Pra ele, é uma requisição legítima que chegou na mesma conexão keep-alive.
+Duas requisições processadas a partir de um único envio TCP. O backend não tem como saber que o `GET /admin` foi smuggled. Pra ele, é uma requisição legítima que chegou na mesma conexão keep-alive.
 
 ---
 
