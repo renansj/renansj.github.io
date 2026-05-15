@@ -155,14 +155,14 @@ O backend lê apenas 4 bytes de body (o valor de Content-Length). Os bytes resta
 
 ```
                     Conexão TCP (keep-alive)
-                    ┌─────────────────────────────────────────┐
-                    │                                         │
-Cliente ──────────► │  PROXY (TE)  ──────────►  BACKEND (CL) │
-                    │                                         │
-                    │  Vê: 1 requisição       Vê: 2 requisições │
-                    │  POST / (chunked body)  POST / (4 bytes)  │
-                    │                         GET /admin         │
-                    └─────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│  Cliente ────►  PROXY (TE)  ────────►  BACKEND (CL)     │
+│                                                          │
+│                 Vê: 1 requisição       Vê: 2 requisições │
+│                 POST / (chunked body)  POST / (4 bytes)  │
+│                                        GET /admin        │
+└──────────────────────────────────────────────────────────┘
 ```
 
 Isso é o **desync**: proxy e backend estão dessincronizados sobre o estado da conexão. O proxy acha que processou uma requisição. O backend processou duas. A segunda requisição foi "contrabandeada" (smuggled) pelo atacante.
