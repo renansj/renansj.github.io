@@ -4,8 +4,6 @@ published: true
 tags: [request-smuggling, web, http]
 ---
 
-# HTTP Request Smuggling: Explorando Desync entre Proxy e Backend
-
 ## Introdução
 
 Em 2005, Watchfire publicou um paper chamado **"HTTP Request Smuggling"** que descrevia uma classe de vulnerabilidade que, na época, pouca gente levou a sério. A ideia era simples e elegante: se dois componentes HTTP (um proxy e um backend) discordam sobre onde uma requisição termina e a próxima começa, um atacante pode "smuggle" uma requisição dentro de outra. O proxy vê uma coisa, o backend vê outra. O resultado é devastador.
