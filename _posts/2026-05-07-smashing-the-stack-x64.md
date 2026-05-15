@@ -1,7 +1,7 @@
 ---
 title: "Smashing the Stack em 2026: Atualização para x86_64 (PT-BR)"
 published: true
-tags: PT-BR
+tags: [binary-exploitation, stack-overflow, x86_64]
 ---
 
 # Smashing the Stack em 2026: Atualização para x86_64 (PT-BR)

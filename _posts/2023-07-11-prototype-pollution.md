@@ -1,6 +1,7 @@
 ---
 title: Understanding prototype pollution
 published: true
+tags: [prototype-pollution, javascript, web]
 ---
 
 ## What is a prototype?
