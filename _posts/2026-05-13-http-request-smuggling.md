@@ -157,7 +157,7 @@ O backend lê apenas 4 bytes de body (o valor de Content-Length). Os bytes resta
                     Conexão TCP (keep-alive)
 ┌──────────────────────────────────────────────────────────┐
 │                                                          │
-│  Cliente ────►  PROXY (TE)  ────────►  BACKEND (CL)     │
+│  Cliente ────►  PROXY (TE)  ────────►  BACKEND (CL)      │
 │                                                          │
 │                 Vê: 1 requisição       Vê: 2 requisições │
 │                 POST / (chunked body)  POST / (4 bytes)  │
