@@ -4,8 +4,6 @@ published: true
 tags: [binary-exploitation, stack-overflow, x86_64]
 ---
 
-# Smashing the Stack em 2026: Atualização para x86_64 (PT-BR)
-
 ## Introdução
 
 Em novembro de 1996, Aleph One publicou na revista eletrônica Phrack (edição 49) o artigo **"Smashing the Stack for Fun and Profit"**. Pra mim, esse texto é uma das coisas mais bonitas já escritas na área de segurança. Não é exagero. É o tipo de material que te faz entender que computação de verdade acontece lá embaixo, nos bytes, nos registradores, na memória crua. Ele introduziu milhares de pesquisadores ao mundo da exploração de binários e se tornou referência absoluta na comunidade de segurança ofensiva.
