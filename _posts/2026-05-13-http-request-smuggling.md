@@ -1,6 +1,6 @@
 ---
 title: "HTTP Request Smuggling: Contrabandeando Requisições na Frente do Proxy"
-published: false
+published: true
 tags: [request-smuggling, web, http]
 ---
 
