@@ -1,0 +1,21 @@
+name: Build check
+
+# Builds the Jekyll site on every PR to master so template/Liquid errors are
+# caught before they can reach the live (Pages) deploy.
+on:
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+
+jobs:
+  jekyll-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
