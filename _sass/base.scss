@@ -393,3 +393,92 @@ time, .post-date {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---- Research-style reading aids ---- */
+
+html { scroll-behavior: smooth; }
+
+/* Reading time next to the date. */
+.reading-time {
+  display: inline-block;
+  color: #9a9a9a;
+  font-size: 14px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  margin: -10px 0 20px 0;
+}
+
+/* Table of contents. */
+.toc {
+  border: 1px solid rgba(181, 232, 83, 0.25);
+  border-radius: 6px;
+  padding: 12px 18px;
+  margin: 0 0 30px 0;
+  background: rgba(181, 232, 83, 0.04);
+}
+.toc-title {
+  margin: 0 0 8px 0;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  color: $conifer;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.toc-list { list-style: none; margin: 0; padding: 0; }
+.toc-list li { line-height: 1.6; }
+.toc-list li::before { content: none; }
+.toc-h3 { padding-left: 18px; font-size: 14px; }
+.toc-list a { text-shadow: none; }
+
+/* Automatic section numbering (1, 1.1, ...) on article headings. */
+.post-body { counter-reset: h2; }
+.post-body h2 { counter-reset: h3; }
+.post-body h2::before {
+  counter-increment: h2;
+  content: counter(h2) ". ";
+  color: #6b7681;
+}
+.post-body h3::before {
+  counter-increment: h3;
+  content: counter(h2) "." counter(h3) " ";
+  color: #6b7681;
+}
+
+/* Clickable anchor that appears on heading hover. */
+.heading-anchor {
+  margin-left: 8px;
+  opacity: 0;
+  text-decoration: none;
+  text-shadow: none;
+  font-weight: normal;
+}
+.post-body h2:hover .heading-anchor,
+.post-body h3:hover .heading-anchor { opacity: 0.6; }
+
+/* How-to-cite block. */
+.cite-block {
+  border-top: 1px dashed rgba(181, 232, 83, 0.4);
+  margin: 40px 0 0 0;
+  padding-top: 20px;
+}
+.cite-title {
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  color: $conifer;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 8px 0;
+}
+.cite-text { color: #9a9a9a; font-size: 14px; }
+.cite-bibtex {
+  font-size: 13px;
+  color: #c9d1d9;
+}
+
+/* Back to top. */
+.back-to-top {
+  display: inline-block;
+  margin-top: 24px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-size: 13px;
+  text-shadow: none;
+}

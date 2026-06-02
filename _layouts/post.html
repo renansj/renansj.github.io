@@ -5,6 +5,7 @@ layout: default
 <article>
   <h2>{{ page.title }}</h2>
   <time datetime="{{ page.date | date_to_xmlschema }}" class="by-line">{{ page.date | date: "%d %b %Y" }}</time>
+  <span class="reading-time">{{ content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
   {% if page.tags.size > 0 %}
   <div class="post-tags">
     {% for tag in page.tags %}
@@ -12,5 +13,28 @@ layout: default
     {% endfor %}
   </div>
   {% endif %}
-  {{ content }}
+
+  <!-- Table of contents, filled from the post headings by /assets/anchors.js -->
+  <nav class="toc" aria-label="Table of contents" hidden>
+    <p class="toc-title">Contents</p>
+    <ul class="toc-list"></ul>
+  </nav>
+
+  <div class="post-body">
+    {{ content }}
+  </div>
+
+  <!-- How to cite: built from the post metadata. -->
+  <section class="cite-block">
+    <p class="cite-title">How to cite</p>
+    <p class="cite-text">{{ site.owner }}. "{{ page.title }}". <em>{{ site.title }}</em>, {{ page.date | date: "%Y" }}. {{ site.url }}{{ page.url }}</p>
+    <pre class="cite-bibtex">@misc{{ "{" }}{{ page.url | slugify }},
+  author = {{ "{" }}{{ site.owner }}{{ "}" }},
+  title  = {{ "{" }}{{ page.title }}{{ "}" }},
+  year   = {{ "{" }}{{ page.date | date: "%Y" }}{{ "}" }},
+  url    = {{ "{" }}{{ site.url }}{{ page.url }}{{ "}" }}
+{{ "}" }}</pre>
+  </section>
+
+  <a href="#top" class="back-to-top">↑ top</a>
 </article>
