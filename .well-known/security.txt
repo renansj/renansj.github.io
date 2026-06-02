@@ -1,0 +1,5 @@
+Contact: https://www.linkedin.com/in/rozapelini/
+Contact: https://github.com/renansj
+Expires: 2027-06-02T00:00:00.000Z
+Preferred-Languages: pt, en
+Canonical: https://renansj.dev/.well-known/security.txt
