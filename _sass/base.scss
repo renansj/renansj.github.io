@@ -173,56 +173,47 @@ pre {
   overflow-y: hidden;
 }
 
-/* Code blocks styled as a macOS terminal window. Targets the block wrapper
-   (div.highlighter-rouge / figure.highlight), not inline code. */
+/* Code blocks styled as a macOS terminal window. The title bar (.code-titlebar)
+   is injected by /assets/copy-code.js as the first child of the wrapper. */
 div.highlighter-rouge,
 figure.highlight {
-  position: relative;
   background: rgba(0, 0, 0, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
   margin: 0 0 20px 0;
-  padding-top: 34px;       /* room for the title bar */
   overflow: hidden;
 }
 
-/* Title bar with the three traffic-light buttons. */
-div.highlighter-rouge::before,
-figure.highlight::before {
-  content: "";
-  position: absolute;
-  top: 12px;
-  left: 14px;
+/* The title bar: traffic lights on the left, language label and copy on the right. */
+.code-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Three traffic-light buttons drawn with a single element + box-shadow. */
+.code-dots {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #ff5f56;                       /* close (red) */
-  box-shadow: 20px 0 #ffbd2e, 40px 0 #27c93f; /* minimize (yellow), zoom (green) */
+  background: #ff5f56;                        /* close (red) */
+  box-shadow: 20px 0 #ffbd2e, 40px 0 #27c93f;  /* minimize (yellow), zoom (green) */
+  margin-left: 2px;
 }
 
-/* Language label on the right side of the title bar. */
-div.highlighter-rouge::after {
-  position: absolute;
-  top: 9px;
-  right: 64px;
+.code-lang {
+  margin-left: auto;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   font-size: 12px;
   color: #6b7681;
   letter-spacing: 0.5px;
 }
-div.language-bash::after      { content: "bash"; }
-div.language-c::after         { content: "c"; }
-div.language-http::after      { content: "http"; }
-div.language-python::after    { content: "python"; }
-div.language-plaintext::after { content: "shell"; }
 
-/* Copy button in the title bar. */
-div.highlighter-rouge .copy-btn,
-figure.highlight .copy-btn {
-  position: absolute;
-  top: 7px;
-  right: 12px;
-  z-index: 2;
+.copy-btn {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #c9d1d9;
@@ -232,13 +223,11 @@ figure.highlight .copy-btn {
   border-radius: 4px;
   cursor: pointer;
 }
-div.highlighter-rouge .copy-btn:hover,
-figure.highlight .copy-btn:hover {
+.copy-btn:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* The inner highlight div and pre sit flush inside the window: drop their own
-   frame and background so the wrapper's title bar (padding-top) stays visible. */
+/* The inner highlight div and pre sit flush inside the window. */
 div.highlighter-rouge .highlight,
 div.highlighter-rouge pre,
 figure.highlight pre {
