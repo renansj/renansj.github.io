@@ -13,8 +13,7 @@
     {%if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}
   </title>
 
-  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl |
-  replace: '//', '/' }}">
+  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}?v={{ site.time | date: '%s' }}">
 
   <link
     href="/atom.xml"
@@ -22,6 +21,6 @@
     rel="alternate"
     title="ATOM Feed"
   />
-  <script src="/assets/copy-code.js" defer></script>
+  <script src="/assets/copy-code.js?v={{ site.time | date: '%s' }}" defer></script>
   {% seo %}
 </head>
