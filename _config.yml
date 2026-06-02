@@ -22,6 +22,8 @@ defaults:
       layout: "post"
 
 future: true
+include:
+  - ".well-known"
 plugins:
   - jekyll-seo-tag
   - jekyll-paginate
