@@ -146,7 +146,13 @@ dt {
 }
 
 ul li {
-  list-style-image:url('../assets/bullet.png');
+  list-style: none;
+}
+
+ul li::before {
+  content: ">> ";
+  color: #a8c977;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
 blockquote {
@@ -192,6 +198,41 @@ figure.highlight::before {
   border-radius: 50%;
   background: #ff5f56;                       /* close (red) */
   box-shadow: 20px 0 #ffbd2e, 40px 0 #27c93f; /* minimize (yellow), zoom (green) */
+}
+
+/* Language label on the right side of the title bar. */
+div.highlighter-rouge::after {
+  position: absolute;
+  top: 9px;
+  right: 64px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-size: 12px;
+  color: #6b7681;
+  letter-spacing: 0.5px;
+}
+div.language-bash::after      { content: "bash"; }
+div.language-c::after         { content: "c"; }
+div.language-http::after      { content: "http"; }
+div.language-python::after    { content: "python"; }
+div.language-plaintext::after { content: "shell"; }
+
+/* Copy button in the title bar. */
+.copy-btn {
+  position: absolute;
+  top: 7px;
+  right: 12px;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #c9d1d9;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* The inner highlight div and pre sit flush inside the window: drop their own
