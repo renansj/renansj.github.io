@@ -167,6 +167,42 @@ pre {
   overflow-y: hidden;
 }
 
+/* Code blocks styled as a macOS terminal window. Targets the block wrapper
+   (div.highlighter-rouge / figure.highlight), not inline code. */
+div.highlighter-rouge,
+figure.highlight {
+  position: relative;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  padding-top: 34px;       /* room for the title bar */
+  overflow: hidden;
+}
+
+/* Title bar with the three traffic-light buttons. */
+div.highlighter-rouge::before,
+figure.highlight::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f56;                       /* close (red) */
+  box-shadow: 20px 0 #ffbd2e, 40px 0 #27c93f; /* minimize (yellow), zoom (green) */
+}
+
+/* The inner pre sits flush inside the window: drop its own frame. */
+div.highlighter-rouge pre,
+figure.highlight pre {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+}
+
 code.highlighter-rouge {
   background: rgba(0,0,0,0.9);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -312,13 +348,6 @@ time, .post-date {
 
 #wrapper {
   min-height: calc(100vh - 100px);
-}
-
-/* Readability: cap the article column to ~70-80 chars per line on wide screens.
-   The home/listing stays at container width (it is not wrapped in <article>). */
-article {
-  max-width: 720px;
-  margin: 0 auto;
 }
 
 /* Respect users who prefer less motion. */
