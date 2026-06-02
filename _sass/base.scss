@@ -194,7 +194,9 @@ figure.highlight::before {
   box-shadow: 20px 0 #ffbd2e, 40px 0 #27c93f; /* minimize (yellow), zoom (green) */
 }
 
-/* The inner pre sits flush inside the window: drop its own frame. */
+/* The inner highlight div and pre sit flush inside the window: drop their own
+   frame and background so the wrapper's title bar (padding-top) stays visible. */
+div.highlighter-rouge .highlight,
 div.highlighter-rouge pre,
 figure.highlight pre {
   background: transparent;
