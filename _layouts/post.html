@@ -28,12 +28,12 @@ layout: default
   <section class="cite-block">
     <p class="cite-title">How to cite</p>
     <p class="cite-text">{{ site.owner }}. "{{ page.title }}". <em>{{ site.title }}</em>, {{ page.date | date: "%Y" }}. {{ site.url }}{{ page.url }}</p>
-    <pre class="cite-bibtex">@misc{{ "{" }}{{ page.url | slugify }},
-  author = {{ "{" }}{{ site.owner }}{{ "}" }},
-  title  = {{ "{" }}{{ page.title }}{{ "}" }},
-  year   = {{ "{" }}{{ page.date | date: "%Y" }}{{ "}" }},
-  url    = {{ "{" }}{{ site.url }}{{ page.url }}{{ "}" }}
-{{ "}" }}</pre>
+    <pre class="cite-bibtex">{% raw %}@misc{{% endraw %}{{ page.url | slugify }},
+  author = {% raw %}{{% endraw %}{{ site.owner }}{% raw %}}{% endraw %},
+  title  = {% raw %}{{% endraw %}{{ page.title }}{% raw %}}{% endraw %},
+  year   = {% raw %}{{% endraw %}{{ page.date | date: "%Y" }}{% raw %}}{% endraw %},
+  url    = {% raw %}{{% endraw %}{{ site.url }}{{ page.url }}{% raw %}}{% endraw %}
+{% raw %}}{% endraw %}</pre>
   </section>
 
   <a href="#top" class="back-to-top">↑ top</a>
