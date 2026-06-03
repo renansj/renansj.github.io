@@ -21,7 +21,7 @@ permalink: /tags
       <ul>
         {% for post in tag[1] %}
           <li>
-            <time>{{ post.date | date: "%d %b %Y" }} - </time>
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%d %b %Y" }} - </time>
             <a href="{{ post.url | prepend: site.baseurl | replace: '//', '/' }}">{{ post.title }}</a>
           </li>
         {% endfor %}
