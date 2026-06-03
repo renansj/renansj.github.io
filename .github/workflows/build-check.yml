@@ -13,7 +13,7 @@ jobs:
   jekyll-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
