@@ -598,3 +598,11 @@ body {
     hyphens: auto;
   }
 }
+
+/* 404 kernel panic block. */
+.kernel-panic {
+  color: #ac4142;
+  border-color: rgba(172, 65, 66, 0.4);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
