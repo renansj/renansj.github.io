@@ -456,6 +456,21 @@ html { scroll-behavior: smooth; }
 .toc-h3 { padding-left: 18px; font-size: 14px; }
 .toc-list a { text-shadow: none; }
 
+/* Automatic section numbering (1, 1.1, ...) on article headings, applied
+   automatically so posts do not need manual numbers in their titles. */
+.post-body { counter-reset: h2; }
+.post-body h2 { counter-reset: h3; }
+.post-body h2::before {
+  counter-increment: h2;
+  content: counter(h2) ". ";
+  color: #6b7681;
+}
+.post-body h3::before {
+  counter-increment: h3;
+  content: counter(h2) "." counter(h3) " ";
+  color: #6b7681;
+}
+
 /* Clickable anchor that appears on heading hover. */
 .heading-anchor {
   margin-left: 8px;
@@ -511,6 +526,33 @@ html { scroll-behavior: smooth; }
 /* The TOC stays inline at the top of the article on all widths. A floating
    sidebar was removed: the 1000px container leaves no reliable room for it and
    it overlapped the text on some widths/scroll positions. */
+
+/* Post layout: content + TOC. On narrow screens it is a single column with the
+   TOC on top. On wide screens it becomes two columns (content + sticky TOC),
+   and the page container widens to make real room for the side column so the
+   TOC never overlaps the text. */
+.post-grid { display: block; }
+
+@media (min-width: 1280px) {
+  /* Widen the container only on post pages (which contain .post-grid). */
+  .container:has(.post-grid) { max-width: 1340px; }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    column-gap: 40px;
+    align-items: start;
+  }
+  .post-grid .post-body { grid-column: 1; min-width: 0; }
+  .post-grid .toc {
+    grid-column: 2;
+    position: sticky;
+    top: 16px;
+    margin: 0;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+}
 
 /* Reinforced visible focus for all interactive elements (a11y). */
 .copy-btn:focus-visible,
