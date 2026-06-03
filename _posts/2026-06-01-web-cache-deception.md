@@ -51,7 +51,7 @@ Para acompanhar, você só precisa de um navegador, do `curl` e de um editor par
 
 ---
 
-## 1. O que é Web Cache Deception
+## O que é Web Cache Deception
 
 Web Cache Deception (WCD) é uma técnica em que o atacante engana um cache intermediário (um CDN, um proxy reverso, uma camada de edge) para que ele armazene uma resposta que contém dados sensíveis de outro usuário. Depois, o atacante simplesmente pede de novo aquela mesma URL e recebe os dados da vítima diretamente do cache, sem precisar de autenticação nenhuma.
 
@@ -71,7 +71,7 @@ Quando os três se alinham, uma URL como `/account/qualquercoisa.css` faz o cach
 
 ---
 
-## 2. Cache Deception não é Cache Poisoning
+## Cache Deception não é Cache Poisoning
 
 Esses dois nomes confundem muita gente, e a distinção é importante porque os vetores, as vítimas e os impactos são diferentes. O README do lab traz a comparação direta, que reproduzo aqui:
 
@@ -86,7 +86,7 @@ Em uma frase: no Cache Poisoning o atacante envenena o cache para atacar os outr
 
 ---
 
-## 3. Como um cache decide o que guardar
+## Como um cache decide o que guardar
 
 Para enganar o cache, primeiro a gente precisa entender como ele pensa. Um proxy de cache trabalha com dois conceitos centrais:
 
@@ -99,7 +99,7 @@ E aqui mora a outra metade do bug. A cache key normalmente inclui o path inteiro
 
 ---
 
-## 4. Anatomia do ataque
+## Anatomia do ataque
 
 Antes de sujar as mãos, vale fixar o fluxo completo. Este diagrama é o do próprio repositório e mostra as duas fases (vítima envenenando, atacante colhendo):
 
@@ -134,7 +134,7 @@ Esse quarto ponto é importante para calibrar o impacto. WCD exige interação d
 
 ---
 
-## 5. Dissecando o backend vulnerável (`app.py`)
+## Dissecando o backend vulnerável (`app.py`)
 
 Vamos ler o backend do lab. É um Flask minúsculo que simula uma aplicação com login e uma área autenticada. Comecei pelos dados sensíveis e pela rota que os entrega:
 
@@ -200,7 +200,7 @@ Ela serve para mostrar o contraste: existem URLs que são legitimamente estátic
 
 ---
 
-## 6. Dissecando o proxy vulnerável (`nginx.conf`)
+## Dissecando o proxy vulnerável (`nginx.conf`)
 
 Agora o outro lado da fronteira. O Nginx do lab está configurado como proxy reverso com cache, e a regra problemática é uma `location` que casa por extensão:
 
@@ -257,7 +257,7 @@ Aqui o proxy não só decide por extensão, ele explicitamente manda o backend c
 
 ---
 
-## 7. Explorando na mão com `curl`
+## Explorando na mão com `curl`
 
 Teoria suficiente. Vamos executar o ataque manualmente primeiro, porque fazer na mão é o que de fato grava o mecanismo na cabeça. Suba o lab e siga os três passos. Cada passo corresponde exatamente a uma das fases do diagrama.
 
@@ -310,7 +310,7 @@ Você vai ver `X-Cache-Status: BYPASS` e um `401 Não autenticado`. Sem a extens
 
 ---
 
-## 8. O exploit automatizado (`exploit.py`)
+## O exploit automatizado (`exploit.py`)
 
 Fazer na mão ensina, mas um PoC reproduzível é o que você entrega em um relatório. O repositório traz um `exploit.py` que orquestra as três fases e ainda valida o impacto automaticamente. Vou destacar as partes que importam.
 
@@ -412,7 +412,7 @@ A sequência `MISS` na fase 2 seguida de `HIT` na fase 3 é a assinatura do ataq
 
 ---
 
-## 9. Variantes de path confusion
+## Variantes de path confusion
 
 Até agora usamos o caso mais limpo, `/account/leak.css`, que depende de o backend ter uma rota permissiva tipo `/account/<path:subpath>`. No mundo real, nem todo backend resolve `/account/leak.css` de bom grado. Muitas vezes você precisa de truques para que o backend continue resolvendo `/account` enquanto o cache continua vendo uma extensão estática. O README do lab lista as principais variantes:
 
@@ -438,7 +438,7 @@ A lição estratégica aqui é que WCD não é um único payload, é uma famíli
 
 ---
 
-## 10. Por que funciona: o parser discrepancy
+## Por que funciona: o parser discrepancy
 
 Se eu tivesse que resumir WCD em uma única ideia para alguém levar para casa, seria esta: a vulnerabilidade é um parser discrepancy entre duas máquinas que processam a mesma string com regras diferentes.
 
@@ -452,7 +452,7 @@ Por isso a melhor forma de caçar WCD, e de revisar arquitetura em geral, é des
 
 ---
 
-## 11. Detecção em alvos reais
+## Detecção em alvos reais
 
 Sair do lab e achar isso na prática exige método. O roteiro que eu sigo é mais ou menos este:
 
@@ -465,7 +465,7 @@ Um cuidado ético e operacional importante: ao testar em produção (com autoriz
 
 ---
 
-## 12. Impacto e severidade
+## Impacto e severidade
 
 O `exploit.py` do lab já documenta a severidade no cabeçalho, e é uma classificação razoável para o caso típico:
 
@@ -486,7 +486,7 @@ O 7.5 reflete bem a natureza do bug: alto roubo de confidencialidade, dependente
 
 ---
 
-## 13. Remediação de verdade
+## Remediação de verdade
 
 A correção segue o princípio que o próprio ataque ensinou: como o bug vive na fronteira entre dois componentes, a defesa precisa estar nos dois lados. Confiar em um lado só é frágil, porque, como vimos no `nginx-docker.conf`, um lado pode anular o outro. O lab traz as recomendações, e eu vou aprofundá-las.
 
@@ -525,7 +525,7 @@ A regra mental que eu carrego: a extensão de uma URL é entrada controlada pelo
 
 ---
 
-## 14. Conclusão
+## Conclusão
 
 Web Cache Deception é, para mim, um lembrete bonito de que segurança não vive só dentro de uma função ou de um trecho de código. Ela vive também nos contratos implícitos entre sistemas, nas suposições que cada componente faz sobre o outro sem nunca verificar. O backend supôs que o proxy não cacharia página dinâmica. O proxy supôs que extensão de arquivo diz a verdade sobre o conteúdo. Cada um, sozinho, parecia razoável. Juntos, entregaram a API Key de um usuário para um anônimo qualquer.
 
