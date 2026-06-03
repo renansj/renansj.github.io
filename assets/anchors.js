@@ -27,7 +27,7 @@
       a.href = "#" + h.id;
       a.className = "heading-anchor";
       a.textContent = "#";
-      a.setAttribute("aria-hidden", "true");
+      a.setAttribute("aria-label", "Link para esta seção");
       h.appendChild(a);
 
       // TOC entry (h3 indented under h2).

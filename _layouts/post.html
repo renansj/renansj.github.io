@@ -14,14 +14,17 @@ layout: default
   </div>
   {% endif %}
 
-  <!-- Table of contents, filled from the post headings by /assets/anchors.js -->
-  <nav class="toc" aria-label="Table of contents" hidden>
-    <p class="toc-title">Contents</p>
-    <ul class="toc-list"></ul>
-  </nav>
+  <div class="post-grid">
+    <div class="post-body">
+      {{ content }}
+    </div>
 
-  <div class="post-body">
-    {{ content }}
+    <!-- Table of contents, filled from the post headings by /assets/anchors.js.
+         Sticky in the side column on wide screens; on top on narrow screens. -->
+    <nav class="toc" aria-label="Table of contents" hidden>
+      <p class="toc-title">Contents</p>
+      <ul class="toc-list"></ul>
+    </nav>
   </div>
 
   <!-- How to cite: built from the post metadata. -->
