@@ -7,8 +7,8 @@
   var s2 = "color:#9aa4b0;font-size:13px;font-family:monospace";
   console.log("%c$ whoami", s1);
   console.log(
-    "%cVocê abriu o console num blog sobre XSS. Que poético.\n" +
-    "Se alguém te mandou COLAR algo aqui prometendo hackear o Insta de alguém,\n" +
+    "%cVocê abriu o console num blog de AppSec. Faz sentido.\n" +
+    "Mas se alguém te mandou COLAR algo aqui prometendo hackear o Insta de alguém,\n" +
     "parabéns: o exploit é em VOCÊ. Isso se chama self-XSS. Não cole nada.\n\n" +
     "Agora, se você veio fuçar de curioso: respeito. Tem uma flag escondida\n" +
     "em algum lugar deste site. Boa sorte. (dica: nem todo segredo está no JS)",
