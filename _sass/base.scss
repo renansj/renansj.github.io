@@ -429,20 +429,6 @@ html { scroll-behavior: smooth; }
 .toc-h3 { padding-left: 18px; font-size: 14px; }
 .toc-list a { text-shadow: none; }
 
-/* Automatic section numbering (1, 1.1, ...) on article headings. */
-.post-body { counter-reset: h2; }
-.post-body h2 { counter-reset: h3; }
-.post-body h2::before {
-  counter-increment: h2;
-  content: counter(h2) ". ";
-  color: #6b7681;
-}
-.post-body h3::before {
-  counter-increment: h3;
-  content: counter(h2) "." counter(h3) " ";
-  color: #6b7681;
-}
-
 /* Clickable anchor that appears on heading hover. */
 .heading-anchor {
   margin-left: 8px;
