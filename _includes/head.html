@@ -1,5 +1,6 @@
 <head>
   <meta charset="UTF-8" />
+  <script>(function(){var a=["default","solarized-dark","solarized-light","black-on-white","white-on-black","green-on-black"];try{var v=localStorage.getItem("theme");document.documentElement.setAttribute("data-theme",a.indexOf(v)>-1?v:"default")}catch(e){}})();</script>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <meta
     name="viewport"
@@ -7,7 +8,7 @@
   />
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'none'; script-src 'self' 'sha256-mOt5CQEidsRudZgzHoj8tnDYBi4K6FxrEQJWv1mhzX0='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; manifest-src 'self'"
+    content="default-src 'none'; script-src 'self' 'sha256-mOt5CQEidsRudZgzHoj8tnDYBi4K6FxrEQJWv1mhzX0=' 'sha256-Je6k0hYm/sk+Y5Dw49VVmfSzyc0wvDcGF1CH8N9yDJs='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; manifest-src 'self'"
   />
 
   <title>
@@ -38,5 +39,6 @@
   <script src="/assets/copy-code.js?v={{ site.time | date: '%s' }}" defer></script>
   <script src="/assets/anchors.js?v={{ site.time | date: '%s' }}" defer></script>
   <script src="/assets/easteregg.js?v={{ site.time | date: '%s' }}" defer></script>
+  <script src="/assets/theme.js?v={{ site.time | date: '%s' }}" defer></script>
   {% seo %}
 </head>
