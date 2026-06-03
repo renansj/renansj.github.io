@@ -15,8 +15,7 @@
   console.log(
     "%cVocê abriu o console num blog de AppSec. Faz sentido.\n" +
     "Mas se alguém te mandou COLAR algo aqui prometendo hackear o Insta de alguém,\n" +
-    "parabéns: o exploit é em VOCÊ. Isso se chama self-XSS. Não cole nada.\n\n" +
-    "Curioso? Tem um segredo neste arquivo. unlock() revela.",
+    "parabéns: o exploit é em VOCÊ. Isso se chama self-XSS. Não cole nada.",
     s2
   );
 
