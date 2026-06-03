@@ -1,0 +1,92 @@
+/* Theme variables. The JS only sets data-theme on <html> from a fixed allowlist,
+   so no untrusted value ever reaches the DOM/CSS (XSS-safe). */
+:root,
+:root[data-theme="default"] {
+  --bg: #12161c;
+  --fg: #c9d1d9;
+  --accent: #b5e853;       /* primary green (titles, prompt, tags) */
+  --accent-soft: #a8c977;  /* desaturated green (content headings) */
+  --muted: #9a9a9a;
+  --link: #7fd4ff;
+  --link-hover: #b5e8ff;
+  --code-bg: rgba(0, 0, 0, 0.9);
+  --code-fg: #c9d1d9;
+  --inline-code: #aa759f;
+  --border: rgba(255, 255, 255, 0.15);
+  --bar-bg: rgba(255, 255, 255, 0.04);
+}
+
+:root[data-theme="solarized-dark"] {
+  --bg: #002b36;
+  --fg: #839496;
+  --accent: #268bd2;
+  --accent-soft: #2aa198;
+  --muted: #586e75;
+  --link: #268bd2;
+  --link-hover: #6c9ec9;
+  --code-bg: #073642;
+  --code-fg: #93a1a1;
+  --inline-code: #d33682;
+  --border: rgba(147, 161, 161, 0.25);
+  --bar-bg: rgba(147, 161, 161, 0.08);
+}
+
+:root[data-theme="solarized-light"] {
+  --bg: #fdf6e3;
+  --fg: #657b83;
+  --accent: #268bd2;
+  --accent-soft: #2aa198;
+  --muted: #93a1a1;
+  --link: #268bd2;
+  --link-hover: #1a6091;
+  --code-bg: #eee8d5;
+  --code-fg: #586e75;
+  --inline-code: #d33682;
+  --border: rgba(101, 123, 131, 0.25);
+  --bar-bg: rgba(101, 123, 131, 0.08);
+}
+
+:root[data-theme="black-on-white"] {
+  --bg: #ffffff;
+  --fg: #000000;
+  --accent: #006400;
+  --accent-soft: #006400;
+  --muted: #555555;
+  --link: #0000ee;
+  --link-hover: #551a8b;
+  --code-bg: #f4f4f4;
+  --code-fg: #1a1a1a;
+  --inline-code: #b00060;
+  --border: rgba(0, 0, 0, 0.2);
+  --bar-bg: rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="white-on-black"] {
+  --bg: #000000;
+  --fg: #ffffff;
+  --accent: #ffffff;
+  --accent-soft: #cccccc;
+  --muted: #999999;
+  --link: #8ab4f8;
+  --link-hover: #c6dafc;
+  --code-bg: #0d0d0d;
+  --code-fg: #ffffff;
+  --inline-code: #ff8ad8;
+  --border: rgba(255, 255, 255, 0.25);
+  --bar-bg: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="green-on-black"] {
+  --bg: #000000;
+  --fg: #33ff33;
+  --accent: #33ff33;
+  --accent-soft: #2ad42a;
+  --muted: #1f991f;
+  --link: #33ff33;
+  --link-hover: #99ff99;
+  --code-bg: #001a00;
+  --code-fg: #33ff33;
+  --inline-code: #99ff99;
+  --border: rgba(51, 255, 51, 0.3);
+  --bar-bg: rgba(51, 255, 51, 0.06);
+}

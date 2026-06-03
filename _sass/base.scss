@@ -4,18 +4,14 @@
 
 @import "rouge-base16-dark";
 @import "default_colors";
+@import "themes";
 
-$body-background: $cod-grey !default;
-$body-foreground: $gallery !default;
-$header: $conifer !default;
-$blockquote-color: $silver-chalice !default;
-$blockquote-border: $dove-grey !default;
 
 body {
   margin: 0;
   padding: 0;
-  background: $body-background url("../assets/bkg.png") 0 0;
-  color: $body-foreground;
+  background: var(--bg);
+  color: var(--fg);
   font-size: 16px;
   line-height: 1.7;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
@@ -57,7 +53,7 @@ li {
 
 header {
   background: rgba(0, 0, 0, 0.1);
-  border-bottom: 1px dashed $conifer; //header;
+  border-bottom: 1px dashed var(--accent); //header;
   padding: 20px;
   margin: 0 0 40px 0;
 }
@@ -77,10 +73,10 @@ header h1 {
   text-align: center;
   font-weight: bold;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  color: $conifer;//$header;
+  color: var(--accent);//var(--accent);
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1),
-               0 0 5px rgba(181, 232, 83, 0.1),
-               0 0 10px rgba(181, 232, 83, 0.1);
+               0 0 5px var(--bar-bg),
+               0 0 10px var(--bar-bg);
   letter-spacing: -1px;
   -webkit-font-smoothing: antialiased;
 }
@@ -88,7 +84,7 @@ header h1 {
 header h2 {
   font-size: 18px;
   font-weight: 300;
-  color: #9a9a9a;
+  color: var(--muted);
 }
 
 /* Main Content
@@ -105,7 +101,7 @@ section img {
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  color: $header;
+  color: var(--accent);
   letter-spacing: -0.03em;
 }
 
@@ -115,12 +111,12 @@ h1, h2, h3, h4, h5, h6 {
 
 #main_content h2 {
   font-size: 26px;
-  color: #a8c977;
+  color: var(--accent-soft);
 }
 
 #main_content h3 {
   font-size: 20px;
-  color: #a8c977;
+  color: var(--accent-soft);
 }
 
 #main_content h4 {
@@ -136,7 +132,7 @@ h1, h2, h3, h4, h5, h6 {
 #main_content h6 {
   font-size: 12px;
   text-transform: uppercase;
-  color: #9a9a9a;
+  color: var(--muted);
   margin: 0 0 5px 0;
 }
 
@@ -151,7 +147,7 @@ ul li {
 
 ul li::before {
   content: ">> " / "";
-  color: #a8c977;
+  color: var(--accent-soft);
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
@@ -161,21 +157,21 @@ ul li time {
   display: inline;
   margin: 0;
   font-size: inherit;
-  color: #9a9a9a;
+  color: var(--muted);
 }
 
 blockquote {
-  color: $blockquote-color;
+  color: var(--muted);
   padding-left: 10px;
-  border-left: 1px dotted $blockquote-border;
+  border-left: 1px dotted var(--border);
 }
 
 pre {
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
   padding: 10px;
   font-size: 16px;
-  color: #c9d1d9;
+  color: var(--code-fg);
   border-radius: 2px;
   text-wrap: normal;
   overflow: auto;
@@ -186,8 +182,8 @@ pre {
    is injected by /assets/copy-code.js as the first child of the wrapper. */
 div.highlighter-rouge,
 figure.highlight {
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
   border-radius: 8px;
   margin: 0 0 20px 0;
   overflow: hidden;
@@ -200,8 +196,8 @@ figure.highlight {
   gap: 10px;
   height: 34px;
   padding: 0 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bar-bg);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Three traffic-light buttons drawn with a single element + box-shadow. */
@@ -218,14 +214,14 @@ figure.highlight {
   margin-left: auto;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   font-size: 12px;
-  color: #9aa4b0;
+  color: var(--muted);
   letter-spacing: 0.5px;
 }
 
 .copy-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #c9d1d9;
+  background: var(--bar-bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   font-size: 11px;
   padding: 2px 8px;
@@ -233,7 +229,7 @@ figure.highlight {
   cursor: pointer;
 }
 .copy-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--border);
 }
 
 /* The inner highlight div and pre sit flush inside the window. */
@@ -247,11 +243,11 @@ figure.highlight pre {
 }
 
 code.highlighter-rouge {
-  background: rgba(0,0,0,0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
   padding: 0px 3px;
   margin: 0px -3px;
-  color: #aa759f;
+  color: var(--inline-code);
   border-radius: 2px;
 }
 
@@ -262,7 +258,7 @@ table {
 
 th {
   text-align: left;
-  border-bottom: 1px dashed #b5e853;
+  border-bottom: 1px dashed var(--accent);
   padding: 5px 10px;
 }
 
@@ -291,8 +287,8 @@ td {
 hr {
   height: 0;
   border: 0;
-  border-bottom: 1px dashed #b5e853;
-  color: #b5e853;
+  border-bottom: 1px dashed var(--accent);
+  color: var(--accent);
 }
 
 /* Buttons
@@ -337,16 +333,16 @@ hr {
 */
 
 a {
-  color: #7fd4ff;
+  color: var(--link);
   text-shadow: 0 0 5px rgba(104, 182, 255, 0.3);
 }
 
 a:hover {
-  color: #b5e8ff;
+  color: var(--link-hover);
 }
 
 a:focus-visible {
-  outline: 2px solid $conifer;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -354,7 +350,7 @@ a:focus-visible {
 /* Post date styling */
 time, .post-date {
   display: block;
-  color: #9a9a9a;
+  color: var(--muted);
   font-size: 14px;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   margin: -10px 0 20px 0;
@@ -367,9 +363,9 @@ time, .post-date {
 
 .tag {
   display: inline-block;
-  background: rgba(181, 232, 83, 0.1);
-  border: 1px solid rgba(181, 232, 83, 0.3);
-  color: $conifer;
+  background: var(--bar-bg);
+  border: 1px solid var(--border);
+  color: var(--accent);
   font-size: 12px;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   padding: 2px 8px;
@@ -379,8 +375,8 @@ time, .post-date {
 }
 
 .tag:hover {
-  background: rgba(181, 232, 83, 0.2);
-  border-color: rgba(181, 232, 83, 0.6);
+  background: var(--bar-bg);
+  border-color: var(--accent);
   text-shadow: none;
 }
 
@@ -428,7 +424,7 @@ html { scroll-behavior: smooth; }
 /* Reading time next to the date. */
 .reading-time {
   display: inline-block;
-  color: #9a9a9a;
+  color: var(--muted);
   font-size: 14px;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   margin: -10px 0 20px 0;
@@ -436,16 +432,16 @@ html { scroll-behavior: smooth; }
 
 /* Table of contents. */
 .toc {
-  border: 1px solid rgba(181, 232, 83, 0.25);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 12px 18px;
   margin: 0 0 30px 0;
-  background: rgba(181, 232, 83, 0.04);
+  background: var(--bar-bg);
 }
 .toc-title {
   margin: 0 0 8px 0;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  color: $conifer;
+  color: var(--accent);
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -463,12 +459,12 @@ html { scroll-behavior: smooth; }
 .post-body h2::before {
   counter-increment: h2;
   content: counter(h2) ". ";
-  color: #6b7681;
+  color: var(--muted);
 }
 .post-body h3::before {
   counter-increment: h3;
   content: counter(h2) "." counter(h3) " ";
-  color: #6b7681;
+  color: var(--muted);
 }
 
 /* Clickable anchor that appears on heading hover. */
@@ -484,22 +480,22 @@ html { scroll-behavior: smooth; }
 
 /* How-to-cite block. */
 .cite-block {
-  border-top: 1px dashed rgba(181, 232, 83, 0.4);
+  border-top: 1px dashed var(--border);
   margin: 40px 0 0 0;
   padding-top: 20px;
 }
 .cite-title {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  color: $conifer;
+  color: var(--accent);
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0 0 8px 0;
 }
-.cite-text { color: #9a9a9a; font-size: 14px; }
+.cite-text { color: var(--muted); font-size: 14px; }
 .cite-bibtex {
   font-size: 13px;
-  color: #c9d1d9;
+  color: var(--code-fg);
 }
 
 /* Back to top. */
@@ -518,7 +514,7 @@ html { scroll-behavior: smooth; }
   left: 0;
   height: 3px;
   width: 0;
-  background: $conifer;
+  background: var(--accent);
   z-index: 50;
 }
 
@@ -567,7 +563,7 @@ html { scroll-behavior: smooth; }
 .tag:focus-visible,
 .page-item:focus-visible,
 button:focus-visible {
-  outline: 2px solid $conifer;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -582,7 +578,7 @@ button:focus-visible {
 
 /* Scroll-spy: highlight the TOC entry for the section currently in view. */
 .toc-list a.toc-active {
-  color: $conifer;
+  color: var(--accent);
   font-weight: bold;
 }
 
@@ -605,4 +601,29 @@ body {
   border-color: rgba(172, 65, 66, 0.4);
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+/* Theme switcher (top-right of the header). */
+header { position: relative; }
+#theme-switcher {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+}
+.theme-select {
+  background: var(--bar-bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-size: 12px;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+.theme-select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  #theme-switcher { position: static; text-align: center; margin: 10px 0 0; }
 }
