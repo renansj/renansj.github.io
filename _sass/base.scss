@@ -155,6 +155,15 @@ ul li::before {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
+/* Archive / Tags list items: keep the >> bullet, date and link on one baseline.
+   Overrides the block-level date styling used in the post header. */
+ul li time {
+  display: inline;
+  margin: 0;
+  font-size: inherit;
+  color: #9a9a9a;
+}
+
 blockquote {
   color: $blockquote-color;
   padding-left: 10px;
@@ -259,6 +268,24 @@ th {
 
 td {
   padding: 5px 10px;
+}
+
+/* Article tables: readable cells + horizontal scroll on narrow screens.
+   Scoped to .post-body so list/layout tables are untouched. No post edits needed. */
+.post-body table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  border-collapse: collapse;
+}
+.post-body th,
+.post-body td {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
+}
+.post-body tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 hr {
@@ -467,4 +494,41 @@ html { scroll-behavior: smooth; }
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   font-size: 13px;
   text-shadow: none;
+}
+
+/* Reading progress bar (filled by /assets/anchors.js). */
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: $conifer;
+  z-index: 50;
+}
+
+/* Sticky/floating TOC on wide screens; stays inline above the article on mobile. */
+@media (min-width: 1100px) {
+  article {
+    position: relative;
+  }
+  .toc {
+    position: sticky;
+    top: 16px;
+    float: right;
+    width: 260px;
+    margin: 0 0 20px 24px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+}
+
+/* Reinforced visible focus for all interactive elements (a11y). */
+.copy-btn:focus-visible,
+.tag:focus-visible,
+.page-item:focus-visible,
+button:focus-visible {
+  outline: 2px solid $conifer;
+  outline-offset: 2px;
+  border-radius: 2px;
 }

@@ -42,4 +42,20 @@
 
     toc.hidden = false;
   });
+
+  // Reading progress bar: width tracks scroll position through the article.
+  document.addEventListener("DOMContentLoaded", function () {
+    var bar = document.getElementById("reading-progress");
+    var body = document.querySelector(".post-body");
+    if (!bar || !body) return;
+
+    function update() {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      bar.style.width = pct + "%";
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  });
 })();
