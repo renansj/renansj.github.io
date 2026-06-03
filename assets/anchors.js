@@ -1,6 +1,4 @@
-// Builds the TOC from post headings, numbers it to match the CSS counter,
-// adds heading anchors, scroll-spy (highlight current section) and a reading
-// progress bar. Same-origin script, allowed by CSP (script-src 'self').
+// TOC (numbered) + heading anchors + scroll-spy + reading progress bar.
 (function () {
   function slugify(text) {
     return text.toLowerCase().trim()
@@ -17,7 +15,7 @@
     if (headings.length < 3) return;
 
     var h2 = 0, h3 = 0;
-    var entries = []; // {id, link} for scroll-spy
+    var entries = [];
 
     headings.forEach(function (h) {
       if (!h.id) h.id = slugify(h.textContent);
@@ -45,7 +43,6 @@
 
     toc.hidden = false;
 
-    // Scroll-spy: mark the heading nearest the top as active.
     function spy() {
       var pos = window.scrollY + 100;
       var active = entries[0];
@@ -60,7 +57,6 @@
     spy();
   });
 
-  // Reading progress bar.
   document.addEventListener("DOMContentLoaded", function () {
     var bar = document.getElementById("reading-progress");
     var body = document.querySelector(".post-body");

@@ -1,6 +1,4 @@
-// Builds a real macOS-style title bar (traffic lights + language label + copy
-// button) at the top of every code block. Same-origin script, allowed by the
-// existing CSP (script-src 'self'); no inline code.
+// Renders a macOS-style title bar (dots, language, copy) on each code block.
 (function () {
   function langOf(block) {
     var m = (block.className || "").match(/language-(\w+)/);
