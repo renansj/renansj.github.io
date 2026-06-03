@@ -508,20 +508,9 @@ html { scroll-behavior: smooth; }
 }
 
 /* Sticky/floating TOC on wide screens; stays inline above the article on mobile. */
-@media (min-width: 1100px) {
-  article {
-    position: relative;
-  }
-  .toc {
-    position: sticky;
-    top: 16px;
-    float: right;
-    width: 260px;
-    margin: 0 0 20px 24px;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-  }
-}
+/* The TOC stays inline at the top of the article on all widths. A floating
+   sidebar was removed: the 1000px container leaves no reliable room for it and
+   it overlapped the text on some widths/scroll positions. */
 
 /* Reinforced visible focus for all interactive elements (a11y). */
 .copy-btn:focus-visible,
