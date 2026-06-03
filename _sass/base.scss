@@ -626,3 +626,29 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Light themes: the base16-dark syntax palette uses light-gray plaintext that
+   vanishes on a light code background. Darken the dominant tokens (plaintext,
+   punctuation, comments) for these themes only; dark themes keep base16-dark. */
+:root[data-theme="solarized-light"] .highlight,
+:root[data-theme="solarized-light"] .highlight .w,
+:root[data-theme="solarized-light"] .highlight .p,
+:root[data-theme="solarized-light"] .highlight .pi,
+:root[data-theme="black-on-white"] .highlight,
+:root[data-theme="black-on-white"] .highlight .w,
+:root[data-theme="black-on-white"] .highlight .p,
+:root[data-theme="black-on-white"] .highlight .pi {
+  color: var(--code-fg);
+}
+:root[data-theme="solarized-light"] .highlight .c,
+:root[data-theme="solarized-light"] .highlight .cd,
+:root[data-theme="solarized-light"] .highlight .cm,
+:root[data-theme="solarized-light"] .highlight .c1,
+:root[data-theme="solarized-light"] .highlight .cs,
+:root[data-theme="black-on-white"] .highlight .c,
+:root[data-theme="black-on-white"] .highlight .cd,
+:root[data-theme="black-on-white"] .highlight .cm,
+:root[data-theme="black-on-white"] .highlight .c1,
+:root[data-theme="black-on-white"] .highlight .cs {
+  color: var(--muted);
+}
