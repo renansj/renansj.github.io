@@ -533,6 +533,14 @@ html { scroll-behavior: smooth; }
    TOC never overlaps the text. */
 .post-grid { display: block; }
 
+/* Narrow screens (<1280px): flex column so the TOC can be ordered ABOVE the
+   content. In plain block flow `order` has no effect and the TOC (last child)
+   would fall to the bottom of the article. */
+@media (max-width: 1279px) {
+  .post-grid { display: flex; flex-direction: column; }
+  .post-grid .toc { order: -1; }
+}
+
 @media (min-width: 1280px) {
   /* Widen the container only on post pages (which contain .post-grid). */
   .container:has(.post-grid) { max-width: 1340px; }
