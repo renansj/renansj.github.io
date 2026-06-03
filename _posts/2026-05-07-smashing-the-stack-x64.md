@@ -61,7 +61,7 @@ Para reproduzir os exemplos, recomendo usar **Kali Linux** ou qualquer distribui
 
 ---
 
-## 1. Organização da Memória de um Processo
+## Organização da Memória de um Processo
 
 Quando um programa é executado no Linux, o kernel cria um espaço de endereçamento virtual para o processo. Em x86_64, o espaço de endereçamento teórico é de 2⁶⁴ bytes, mas na prática apenas 48 bits são usados (endereços canônicos), resultando em um espaço utilizável de 256 TB.
 
@@ -146,7 +146,7 @@ Observe: endereços de stack começam com `0x7fff...`, e os dois bytes mais sign
 
 ---
 
-## 2. A Stack em x86_64
+## A Stack em x86_64
 
 A stack é uma região de memória LIFO (Last In, First Out) usada para:
 
@@ -276,7 +276,7 @@ Retornou normalmente.
 
 ---
 
-## 3. Buffer Overflow: O Conceito Fundamental
+## Buffer Overflow: O Conceito Fundamental
 
 A ideia central é simples: quando dados são escritos além dos limites de um buffer alocado, eles sobrescrevem dados adjacentes na memória. Na stack, isso pode sobrescrever o endereço de retorno salvo (saved RIP), e aí o atacante redireciona o fluxo de execução pra onde quiser.
 
@@ -390,11 +390,11 @@ Para controlar o RIP, precisamos de exatamente **72 bytes de padding** seguidos 
 
 ---
 
-## 4. Redirecionando a Execução
+## Redirecionando a Execução
 
 Beleza, controlamos o RIP. E agora? O próximo passo é redirecioná-lo para algo útil. No artigo original de Aleph One, a técnica era direta: colocar shellcode na stack e apontar o RIP para ele. Vamos reproduzir isso primeiro (com proteções desabilitadas) e depois evoluir para técnicas modernas.
 
-### 4.1 Redirecionando para uma função existente
+### Redirecionando para uma função existente
 
 O caso mais simples: redirecionar a execução para uma função que já existe no programa.
 
@@ -451,7 +451,7 @@ Segmentation fault
 
 Funcionou! O programa executou `secret()` em vez de retornar normalmente para `main()`. O segfault no final é esperado porque, após `secret()` retornar, o stack frame está corrompido.
 
-### 4.2 O problema dos null bytes em x86_64
+### O problema dos null bytes em x86_64
 
 Observe o endereço `0x0000000000401146`. Em little-endian:
 
@@ -469,7 +469,7 @@ Mas se precisássemos colocar **múltiplos endereços** (como em uma ROP chain),
 2. **ROP gadgets em endereços sem null bytes**: buscar gadgets em regiões de endereço que não contêm `\x00`
 3. **Stack pivot**: redirecionar RSP para uma região controlada onde o payload foi escrito via `read()`
 
-### 4.3 Shellcode na stack (método clássico, proteções desabilitadas)
+### Shellcode na stack (método clássico, proteções desabilitadas)
 
 No artigo original, Aleph One colocava shellcode diretamente na stack. Vamos reproduzir isso em x64 com proteções desabilitadas:
 
@@ -649,7 +649,7 @@ $
 
 O shellcode foi executado na stack e obtivemos um shell. Isso só funciona porque compilamos com `-z execstack` (NX desabilitado). Em binários modernos, a stack não é executável e precisamos de técnicas como ROP.
 
-### 4.4 NOP Sled: Por que ainda é relevante
+### NOP Sled: Por que ainda é relevante
 
 O NOP sled (sequência de instruções `NOP` = `\x90`) serve como "zona de pouso". Não precisamos acertar o endereço exato do shellcode, basta cair em qualquer ponto do NOP sled e a execução "desliza" até o shellcode.
 
@@ -667,11 +667,11 @@ Em x64, com endereços de 48 bits efetivos e ASLR, o NOP sled sozinho não é su
 
 ---
 
-## 5. Proteções Modernas: O que Mudou Desde 1996
+## Proteções Modernas: O que Mudou Desde 1996
 
 Em 1996, não existia nenhuma proteção contra buffer overflow. Zero. Você estourava o buffer, sobrescrevia o RIP, e era isso. Hoje, sistemas modernos implementam múltiplas camadas de defesa. Entender cada uma é essencial pra saber como (e se) podem ser contornadas.
 
-### 5.1 NX/DEP (No-eXecute / Data Execution Prevention)
+### NX/DEP (No-eXecute / Data Execution Prevention)
 
 **O que faz**: Marca regiões de memória como não-executáveis. A stack, heap e segmentos de dados não podem executar código. Apenas o segmento `.text` é executável.
 
@@ -700,7 +700,7 @@ $ readelf -l ./programa | grep GNU_STACK
 
 **Bypass**: Return-Oriented Programming (ROP), ret2libc, ret2plt. A ideia é reutilizar código executável existente em vez de injetar novo código.
 
-### 5.2 ASLR (Address Space Layout Randomization)
+### ASLR (Address Space Layout Randomization)
 
 **O que faz**: Randomiza os endereços base de stack, heap, bibliotecas compartilhadas e (com PIE) do próprio executável a cada execução.
 
@@ -734,7 +734,7 @@ Cada execução tem endereços diferentes!
 - **Format string**: vazar endereços da stack via `%p`
 - **ret2plt**: endereços de PLT são fixos quando PIE está desabilitado
 
-### 5.3 Stack Canaries (Stack Smashing Protection)
+### Stack Canaries (Stack Smashing Protection)
 
 **O que faz**: Insere um valor aleatório (canário) entre as variáveis locais e o saved RBP/RIP. Antes de retornar, a função verifica se o canário foi modificado.
 
@@ -789,7 +789,7 @@ ret
 - **Overwrite sem passar pelo canário**: write-what-where primitives, index out-of-bounds
 - **Sobrescrever o canário com o valor correto**: se conseguir leak primeiro
 
-### 5.4 PIE (Position Independent Executable)
+### PIE (Position Independent Executable)
 
 **O que faz**: Compila o executável como código posição-independente, permitindo que o ASLR randomize também o endereço base do próprio programa (não apenas libs).
 
@@ -807,7 +807,7 @@ $ checksec --file=./programa
 
 **Bypass**: Necessário leak de endereço do binário para calcular base. Partial overwrite dos bytes menos significativos (que não mudam com PIE).
 
-### 5.5 RELRO (Relocation Read-Only)
+### RELRO (Relocation Read-Only)
 
 **O que faz**: Protege a GOT (Global Offset Table) contra sobrescrita.
 
@@ -818,7 +818,7 @@ $ checksec --file=./programa
 
 **Bypass**: Com Full RELRO, atacar outros alvos: hooks de malloc, `__free_hook`, `__malloc_hook` (removidos em glibc 2.34+), vtables, ponteiros de função em estruturas.
 
-### 5.6 Fortify Source
+### Fortify Source
 
 **O que faz**: Substitui funções inseguras por versões com verificação de tamanho em tempo de compilação e execução (`__strcpy_chk`, `__memcpy_chk`, etc.).
 
@@ -826,7 +826,7 @@ $ checksec --file=./programa
 
 **Impacto**: `strcpy(buffer, input)` é substituído por `__strcpy_chk(buffer, input, sizeof(buffer))` quando o compilador consegue determinar o tamanho do buffer.
 
-### 5.7 Resumo de proteções e compilação
+### Resumo de proteções e compilação
 
 ```bash
 # Compilar SEM proteções (para estudo):
@@ -839,7 +839,7 @@ gcc -o prog prog.c -fstack-protector-strong -pie -fPIE -Wl,-z,relro,-z,now -D_FO
 checksec --file=./programa
 ```
 
-### 5.8 Tabela de impacto nas técnicas de exploração
+### Tabela de impacto nas técnicas de exploração
 
 | Proteção | Shellcode na stack | ret2libc | ROP | Format string |
 |----------|-------------------|----------|-----|---------------|
@@ -853,11 +853,11 @@ checksec --file=./programa
 
 ---
 
-## 6. Return-to-libc (ret2libc) em x86_64
+## Return-to-libc (ret2libc) em x86_64
 
 Com NX habilitado, não podemos executar shellcode na stack. A solução: reutilizar código que **já é executável**, como funções da libc (`system()`, `execve()`, etc.).
 
-### 6.1 A diferença fundamental em x64
+### A diferença fundamental em x64
 
 No x86 (32 bits), ret2libc era simples porque argumentos eram passados pela stack:
 
@@ -875,7 +875,7 @@ Em x86_64, o primeiro argumento vai em **RDI**, não na stack. Precisamos de um 
                  ↑ sobrescreve RIP     ↑ vai para RDI   ↑ chamado após pop+ret
 ```
 
-### 6.2 Exemplo prático: ret2libc com NX ativo
+### Exemplo prático: ret2libc com NX ativo
 
 ```c
 /* vuln4.c - ret2libc em x64 */
@@ -1007,7 +1007,7 @@ Com alinhamento (funciona):
           ↑ ret extra alinha RSP
 ```
 
-### 6.3 Automatizando com pwntools
+### Automatizando com pwntools
 
 Na prática, usamos **pwntools** para automatizar a exploração:
 
@@ -1078,11 +1078,11 @@ kali
 
 ---
 
-## 7. Return-Oriented Programming (ROP)
+## Return-Oriented Programming (ROP)
 
 ROP é a evolução natural do ret2libc. Em vez de chamar uma única função, encadeamos múltiplos **gadgets** (pequenos trechos de código que terminam em `ret`) para construir computação arbitrária.
 
-### 7.1 O que é um gadget?
+### O que é um gadget?
 
 Um gadget é uma sequência de instruções que termina com `ret`. Quando o `ret` é executado, o próximo endereço na stack é carregado em RIP, permitindo encadear gadgets sequencialmente.
 
@@ -1097,7 +1097,7 @@ syscall; ret          ; Executa syscall
 xor eax, eax; ret    ; Zera RAX
 ```
 
-### 7.2 Como funciona o encadeamento
+### Como funciona o encadeamento
 
 A stack funciona como um "programa" para a ROP chain:
 
@@ -1125,7 +1125,7 @@ RSP →  ┌─────────────────────┐
 
 Cada `ret` faz `pop RIP` da stack, avançando RSP e executando o próximo gadget.
 
-### 7.3 Encontrando gadgets
+### Encontrando gadgets
 
 ```bash
 # ROPgadget - ferramenta principal
@@ -1145,7 +1145,7 @@ constraints:
   rcx == NULL
 ```
 
-### 7.4 Exemplo: ROP chain para execve("/bin/sh", NULL, NULL)
+### Exemplo: ROP chain para execve("/bin/sh", NULL, NULL)
 
 ```c
 /* vuln5.c - Alvo para ROP */
@@ -1243,7 +1243,7 @@ p.send(payload)
 p.interactive()
 ```
 
-### 7.5 ROP com pwntools automático
+### ROP com pwntools automático
 
 O pwntools pode construir ROP chains automaticamente:
 
@@ -1291,7 +1291,7 @@ $
 
 NX ativo, stack não-executável, e mesmo assim obtivemos shell. Isso é o poder do ROP: reutilizar código existente em vez de injetar código novo.
 
-### 7.6 Gadgets úteis e onde encontrá-los
+### Gadgets úteis e onde encontrá-los
 
 | Gadget | Uso | Onde encontrar |
 |--------|-----|----------------|
@@ -1305,7 +1305,7 @@ NX ativo, stack não-executável, e mesmo assim obtivemos shell. Isso é o poder
 | `mov [rdi], rsi; ret` | Write-what-where | Libc (raro, mas existe) |
 | `xchg rax, rdi; ret` | Mover retorno para argumento | Libc |
 
-### 7.7 __libc_csu_init gadgets (técnica universal)
+### __libc_csu_init gadgets (técnica universal)
 
 Em binários compilados com GCC, a função `__libc_csu_init` contém gadgets universais que permitem controlar RDI, RSI e RDX:
 
@@ -1336,11 +1336,11 @@ Esta técnica (chamada **ret2csu**) permite controlar os 3 primeiros argumentos 
 
 ---
 
-## 8. Bypass de ASLR: Information Leak
+## Bypass de ASLR: Information Leak
 
 Até agora desabilitamos ASLR pra simplificar. Na vida real, ASLR está **sempre ativo**. Pra contornar isso, precisamos **vazar um endereço** em runtime e calcular os demais por offset.
 
-### 8.1 O conceito: leak → calculate → exploit
+### O conceito: leak → calculate → exploit
 
 ```
 1. Vazar endereço de uma função da libc (ex: puts@GOT)
@@ -1353,7 +1353,7 @@ Isso geralmente requer **duas interações** com o programa (ou um loop):
 - **Primeira passagem**: vazar endereço, retornar para `main()` ou `vulnerable()`
 - **Segunda passagem**: enviar payload final com endereços calculados
 
-### 8.2 Exemplo: leak via puts@PLT
+### Exemplo: leak via puts@PLT
 
 ```c
 /* vuln6.c - Alvo para leak + ret2libc com ASLR */
@@ -1480,7 +1480,7 @@ if __name__ == "__main__":
     exploit()
 ```
 
-### 8.3 Execução
+### Execução
 
 ```bash
 $ python3 exploit_vuln6.py
@@ -1504,7 +1504,7 @@ uid=1000(kali) gid=1000(kali) groups=1000(kali)
 
 **ASLR bypassed!** Mesmo com endereços randomizados, o leak nos permite calcular tudo.
 
-### 8.4 Outras técnicas de leak
+### Outras técnicas de leak
 
 | Técnica | Quando usar |
 |---------|-------------|
@@ -1515,7 +1515,7 @@ uid=1000(kali) gid=1000(kali) groups=1000(kali)
 | Stack leak via over-read | Buffer adjacente a ponteiro na stack |
 | Heap leak | Use-after-free, double free |
 
-### 8.5 Identificando a versão da libc
+### Identificando a versão da libc
 
 Com um ou mais endereços vazados, podemos identificar a versão exata da libc:
 
@@ -1533,11 +1533,11 @@ Os últimos 3 nibbles (12 bits) de um endereço de função na libc são fixos (
 
 ---
 
-## 9. Bypass de Stack Canary
+## Bypass de Stack Canary
 
 O canário é a última barreira antes do saved RIP. Se não conseguirmos contorná-lo, o overflow é detectado e o programa aborta.
 
-### 9.1 Técnica: Leak do canário via format string
+### Técnica: Leak do canário via format string
 
 Se o programa tem uma vulnerabilidade de format string **antes** do overflow, podemos vazar o canário:
 
@@ -1702,7 +1702,7 @@ $ id
 uid=1000(kali) gid=1000(kali) groups=1000(kali)
 ```
 
-### 9.2 Técnica: Brute force byte-a-byte (servidores com fork)
+### Técnica: Brute force byte-a-byte (servidores com fork)
 
 Em servidores que usam `fork()` para atender conexões, o processo filho herda o **mesmo canário** do pai. Se o servidor não faz `execve()` após o fork, podemos fazer brute force byte a byte:
 
@@ -1739,7 +1739,7 @@ def brute_force_canary(p, offset):
     return u64(canary)
 ```
 
-### 9.3 Outras técnicas de bypass
+### Outras técnicas de bypass
 
 | Técnica | Cenário |
 |---------|---------|
@@ -1750,11 +1750,11 @@ def brute_force_canary(p, offset):
 
 ---
 
-## 10. Format String Vulnerabilities em x86_64
+## Format String Vulnerabilities em x86_64
 
 Format string bugs são absurdamente poderosos: permitem **leitura e escrita arbitrária** na memória. Em x64, a mecânica muda um pouco por causa da calling convention.
 
-### 10.1 O bug
+### O bug
 
 ```c
 /* Vulnerável */
@@ -1764,7 +1764,7 @@ printf(user_input);      /* Atacante controla o format string! */
 printf("%s", user_input); /* Format string fixo */
 ```
 
-### 10.2 Leitura de memória (information leak)
+### Leitura de memória (information leak)
 
 Em x64, `printf` espera argumentos em registradores (RDI, RSI, RDX, RCX, R8, R9) e depois na stack. O format string está em RDI, então:
 
@@ -1785,7 +1785,7 @@ Output: 0x7fffffffde10.0x64.0x7ffff7e1a992.(nil).0x7fffffffde30.0xa.
         0x4141414141414141.0x4141414141414141...
 ```
 
-### 10.3 Encontrando o offset do nosso input
+### Encontrando o offset do nosso input
 
 ```bash
 # Onde nosso input aparece na stack?
@@ -1802,7 +1802,7 @@ Input: ABCDEFGH%6$p
 Output: ABCDEFGH0x4847464544434241   # "ABCDEFGH" em little-endian = offset 6
 ```
 
-### 10.4 Escrita arbitrária com %n
+### Escrita arbitrária com %n
 
 O especificador `%n` escreve o número de bytes impressos até aquele ponto no endereço apontado pelo argumento correspondente.
 
@@ -1836,7 +1836,7 @@ value = 0x401142        # win()
 payload = fmt_write(target_addr, value)
 ```
 
-### 10.5 pwntools fmtstr automático
+### pwntools fmtstr automático
 
 ```python
 from pwn import *
@@ -1856,7 +1856,7 @@ autofmt.write(0x404028, 0x401142)  # exit@GOT → win()
 autofmt.execute_writes()
 ```
 
-### 10.6 Format string como primitiva universal
+### Format string como primitiva universal
 
 Com format string, temos:
 1. **Leitura arbitrária** (`%s` com endereço controlado) → leak de canário, libc, PIE base
@@ -1867,11 +1867,11 @@ Por isso format string é considerada uma das vulnerabilidades mais poderosas em
 
 ---
 
-## 11. Exemplo Completo: Exploração End-to-End com Todas as Proteções
+## Exemplo Completo: Exploração End-to-End com Todas as Proteções
 
 Agora vamos juntar tudo num cenário mais realista: um binário com **NX, ASLR, Stack Canary e Partial RELRO** (sem PIE pra manter acessível a quem está começando).
 
-### 11.1 O programa vulnerável
+### O programa vulnerável
 
 ```c
 /* vuln_full.c - Cenário realista com múltiplas proteções */
@@ -1944,13 +1944,13 @@ $ checksec --file=./vuln_full
     Debuginfo:  Yes
 ```
 
-### 11.2 Plano de ataque
+### Plano de ataque
 
 1. **Format string** (opção 2) → vazar canário e endereço da libc
 2. **Buffer overflow** (opção 1) → sobrescrever RIP com ROP chain, preservando canário
 3. **ROP chain** → ret2libc com `system("/bin/sh")`
 
-### 11.3 Exploit completo
+### Exploit completo
 
 ```python
 #!/usr/bin/env python3
@@ -2114,7 +2114,7 @@ uid=1000(kali) gid=1000(kali) groups=1000(kali)
 
 Três proteções bypassadas em sequência: format string vaza o canário e um endereço da libc, o overflow preserva o canário correto, e a ROP chain chama `system("/bin/sh")` com endereços calculados.
 
-### 11.4 Notas sobre o exploit
+### Notas sobre o exploit
 
 1. **Os offsets do format string precisam ser descobertos empiricamente.** Eles variam conforme compilador, otimizações e layout da stack.
 
@@ -2129,9 +2129,9 @@ Três proteções bypassadas em sequência: format string vaza o canário e um e
 
 ---
 
-## 12. Ferramentas Essenciais
+## Ferramentas Essenciais
 
-### 12.1 GDB com extensões
+### GDB com extensões
 
 O GDB puro é funcional mas pouco amigável. Use uma extensão:
 
@@ -2160,7 +2160,7 @@ Comandos essenciais:
 (gdb) plt                   # Mostrar PLT entries
 ```
 
-### 12.2 pwntools
+### pwntools
 
 Framework Python para exploração de binários:
 
@@ -2208,7 +2208,7 @@ cyclic(200)              # Gerar padrão
 cyclic_find(0x61616168)  # Encontrar offset
 ```
 
-### 12.3 Outras ferramentas
+### Outras ferramentas
 
 | Ferramenta | Uso |
 |------------|-----|
@@ -2225,7 +2225,7 @@ cyclic_find(0x61616168)  # Encontrar offset
 | `patchelf` | Modificar ELF (trocar libc, linker) |
 | `pwninit` | Setup automático de ambiente (libc, linker) |
 
-### 12.4 Workflow típico de exploração
+### Workflow típico de exploração
 
 ```
 1. checksec ./programa          → Identificar proteções
@@ -2240,11 +2240,11 @@ cyclic_find(0x61616168)  # Encontrar offset
 
 ---
 
-## 13. Técnicas Avançadas: Além do Básico
+## Técnicas Avançadas: Além do Básico
 
 Aqui entram técnicas que vão além do escopo do artigo original, mas que são essenciais pra exploração moderna. Cada uma delas merecia um artigo próprio, mas vou dar uma visão geral pra vocês saberem que existem e onde procurar mais.
 
-### 13.1 Stack Pivot
+### Stack Pivot
 
 Quando o overflow é limitado (poucos bytes após o RIP), podemos redirecionar o RSP para uma região maior que controlamos:
 
@@ -2268,7 +2268,7 @@ payload += p64(BUFFER_ADDR)  # saved RBP → aponta para nosso buffer
 payload += p64(LEAVE_RET)    # saved RIP → leave; ret (pivota stack)
 ```
 
-### 13.2 ret2dlresolve
+### ret2dlresolve
 
 Técnica avançada que abusa do dynamic linker para resolver símbolos arbitrários, sem precisar de leak da libc:
 
@@ -2293,7 +2293,7 @@ p.send(dlresolve.payload)  # Enviar estruturas fake para .bss
 p.interactive()
 ```
 
-### 13.3 SROP (Sigreturn-Oriented Programming)
+### SROP (Sigreturn-Oriented Programming)
 
 Usa a syscall `sigreturn` para carregar **todos os registradores** de uma vez a partir de um frame na stack:
 
@@ -2318,7 +2318,7 @@ payload += p64(syscall_addr) # syscall (executa sigreturn)
 payload += bytes(frame)      # Signal frame com registradores desejados
 ```
 
-### 13.4 Partial Overwrite (bypass PIE)
+### Partial Overwrite (bypass PIE)
 
 Com PIE ativo, endereços do binário são randomizados. Mas os **últimos 12 bits** (3 nibbles) são sempre fixos (alinhamento de página de 4KB). Podemos sobrescrever apenas 1-2 bytes do endereço de retorno:
 
@@ -2334,7 +2334,7 @@ payload += b"\x42\x51"  # Sobrescreve apenas 2 bytes do RIP
 # Funciona 1/16 das vezes (4 bits de entropia no nibble que muda)
 ```
 
-### 13.5 One Gadget
+### One Gadget
 
 Gadgets na libc que dão shell diretamente, sem precisar de ROP chain complexa:
 
@@ -2363,7 +2363,7 @@ payload = b"A" * offset + p64(one_gadget)
 
 ---
 
-## 14. Exercícios Práticos
+## Exercícios Práticos
 
 Para consolidar o conhecimento, aqui estão exercícios progressivos:
 
@@ -2397,7 +2397,7 @@ Para consolidar o conhecimento, aqui estão exercícios progressivos:
 
 ---
 
-## 15. Comparação Resumida: x86 vs x86_64
+## Comparação Resumida: x86 vs x86_64
 
 | Aspecto | x86 (artigo original) | x86_64 (este artigo) |
 |---------|----------------------|----------------------|
@@ -2419,7 +2419,7 @@ Para consolidar o conhecimento, aqui estão exercícios progressivos:
 
 ---
 
-## 16. Conclusão
+## Conclusão
 
 O "Smashing the Stack for Fun and Profit" do Aleph One estabeleceu as bases da exploração de binários em 1996. Trinta anos depois, os **conceitos fundamentais permanecem os mesmos**:
 

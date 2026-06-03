@@ -45,7 +45,7 @@ Python 3.13.12
 
 ---
 
-## 1. O Problema Fundamental: Como HTTP Delimita Requisições
+## O Problema Fundamental: Como HTTP Delimita Requisições
 
 HTTP/1.1 é um protocolo text-based que roda sobre TCP. TCP é um stream de bytes, não tem conceito de "mensagens". Quem define onde uma mensagem HTTP começa e termina é o **parser HTTP** de cada componente.
 
@@ -104,7 +104,7 @@ Neste artigo vamos focar em **TE.CL**: o proxy prioriza Transfer-Encoding (compo
 
 ---
 
-## 2. Visualizando o Desync
+## Visualizando o Desync
 
 Antes de mergulhar no código, vamos entender visualmente o que acontece. Imagine a seguinte requisição enviada por um atacante:
 
@@ -167,7 +167,7 @@ Isso é o **desync**: proxy e backend estão dessincronizados sobre o estado da 
 
 ---
 
-## 3. Construindo um Backend Vulnerável em C
+## Construindo um Backend Vulnerável em C
 
 Pra entender de verdade como o smuggling funciona, nada melhor do que construir um servidor HTTP vulnerável do zero. Vamos escrever um backend em C que propositalmente prioriza Content-Length quando ambos os headers estão presentes.
 
@@ -323,7 +323,7 @@ $ ./backend 9090
 
 ---
 
-## 4. Explorando o Desync na Prática
+## Explorando o Desync na Prática
 
 Agora que temos o backend vulnerável rodando, vamos explorar. O exploit usa sockets raw em Python, nada de `requests` ou abstrações que normalizam os headers. Precisamos de controle total sobre os bytes enviados.
 
@@ -453,7 +453,7 @@ Duas requisições processadas a partir de um único envio TCP. O backend não t
 
 ---
 
-## 5. O Cenário Real: Proxy + Backend
+## O Cenário Real: Proxy + Backend
 
 No exemplo anterior, enviamos direto ao backend. Mas no mundo real, o atacante não tem acesso direto ao backend. Ele fala com o proxy. O proxy é quem decide o que encaminhar. Vamos adicionar o proxy ao cenário.
 
@@ -531,7 +531,7 @@ Isso significa que o atacante pode:
 
 ---
 
-## 6. Variante CL.TE
+## Variante CL.TE
 
 Até agora vimos TE.CL (proxy usa TE, backend usa CL). A variante inversa, **CL.TE**, funciona quando o proxy usa Content-Length e o backend usa Transfer-Encoding.
 
@@ -602,11 +602,11 @@ Cada implementação reage de forma diferente a essas variações. Se uma aceita
 
 ---
 
-## 7. Impacto Real: O Que um Atacante Consegue
+## Impacto Real: O Que um Atacante Consegue
 
 Request smuggling não é uma vulnerabilidade que você explora isoladamente. O poder real está no que você faz **depois** de conseguir o desync.
 
-### 7.1 Bypass de controles de acesso
+### Bypass de controles de acesso
 
 Se o proxy implementa controle de acesso (bloqueia `/admin` para IPs externos, por exemplo), o atacante pode smugglar uma requisição `GET /admin` que chega ao backend **sem passar pela validação do proxy**.
 
@@ -617,11 +617,11 @@ Backend: "Recebi POST / e GET /admin, processo ambos."
 
 O proxy nunca viu o `GET /admin`. Ele foi injetado diretamente no buffer do backend.
 
-### 7.2 Envenenamento de cache (Cache Poisoning)
+### Envenenamento de cache (Cache Poisoning)
 
 Se existe um cache entre o proxy e o cliente (CDN, Varnish, etc.), o atacante pode fazer o cache armazenar a resposta errada para uma URL legítima. Se a próxima requisição legítima na mesma conexão é `GET /static/app.js`, o cache pode armazenar a resposta da requisição smuggled como a resposta canônica para `/static/app.js`. Todos os usuários subsequentes recebem o conteúdo envenenado.
 
-### 7.3 Roubo de credenciais (Request Hijacking)
+### Roubo de credenciais (Request Hijacking)
 
 O atacante pode smugglar uma requisição parcial que "absorve" a próxima requisição de outro usuário:
 
@@ -636,17 +636,17 @@ smuggled = (
 
 O backend vê `POST /log` com `Content-Length: 500`. Ele espera 500 bytes de body. Os próximos 500 bytes que chegam na conexão são a requisição do próximo usuário! Incluindo cookies, tokens de autenticação, e qualquer dado sensível nos headers.
 
-### 7.4 Reflected XSS → Stored XSS
+### Reflected XSS → Stored XSS
 
 Se o alvo tem um XSS refletido em algum parâmetro, o atacante pode usar smuggling para transformá-lo em stored. Ele smuggla uma requisição com o payload XSS que é "servida" para o próximo usuário que acessa a página, sem que a vítima precise clicar em nenhum link.
 
-### 7.5 Bypass de WAF
+### Bypass de WAF
 
 Web Application Firewalls inspecionam requisições no nível do proxy. Se o WAF vê `POST /` com body inofensivo, ele permite. Mas o backend processa `GET /admin?cmd=whoami` que estava escondido dentro do body. O WAF nunca viu essa segunda requisição.
 
 ---
 
-## 8. HTTP/2 Desync: A Evolução
+## HTTP/2 Desync: A Evolução
 
 Em 2021-2022, James Kettle publicou pesquisa sobre **HTTP/2 request smuggling** (H2.CL e H2.TE). O HTTP/2 usa framing binário, cada requisição é um stream independente com length fields explícitos. Em teoria, isso eliminaria o problema de delimitação. Na prática, não.
 
@@ -688,7 +688,7 @@ Em 2024, pesquisadores descobriram que frames CONTINUATION em HTTP/2 podiam ser 
 
 ---
 
-## 9. Conexão com Race Conditions: "Smashing the State Machine"
+## Conexão com Race Conditions: "Smashing the State Machine"
 
 Em 2023, James Kettle apresentou na DEF CON 31 a talk **"Smashing the State Machine: The True Potential of Web Race Conditions"**. Essa pesquisa expandiu o conceito de desync de uma forma que eu acho brilhante: ele mostrou que request smuggling e race conditions são manifestações do mesmo problema fundamental, a **dessincronização de estado entre componentes**.
 
@@ -736,7 +736,7 @@ Ambos exploram o fato de que sistemas distribuídos são difíceis de manter con
 
 ---
 
-## 10. Mitigação de Desync na AWS
+## Mitigação de Desync na AWS
 
 Se você opera infraestrutura na AWS, request smuggling é um risco real e documentado. A AWS teve múltiplos advisories sobre isso.
 
@@ -807,7 +807,7 @@ Se o Gunicorn no ECS tem uma versão que prioriza TE diferente do ALB:
 
 ---
 
-## 11. Como Corrigir o Backend Vulnerável
+## Como Corrigir o Backend Vulnerável
 
 Voltando ao nosso `backend.c`, como corrigir o bug?
 
@@ -881,7 +881,7 @@ int parse_request_fixed(const char *raw, int raw_len, http_request_t *req) {
 
 ---
 
-## 12. Detectando Request Smuggling em Pentests
+## Detectando Request Smuggling em Pentests
 
 ### Técnica de detecção: timing differential
 
@@ -955,7 +955,7 @@ if __name__ == "__main__":
 
 ---
 
-## 13. Timeline e Referências Históricas
+## Timeline e Referências Históricas
 
 | Ano | Evento |
 |-----|--------|
