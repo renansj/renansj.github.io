@@ -587,16 +587,3 @@ A indústria trata CVE como incidente. Pesquisador enxerga o padrão gerador. A 
 *Publicado em junho de 2026. Este artigo nasceu de uma conversa sobre por que desserialização "sempre" parece ter um bypass. A resposta curta: porque a pré-condição é inverificável por design. A resposta longa é o post inteiro acima.*
 
 *Curtiu? Compartilha com quem trabalha com segurança. Conteúdo técnico em português sobre ofensiva e fundamentos é raro e precisa circular mais.*
-
-## How to cite
-
-Renan Zapelini. "Inferência de Tipo é Superfície de Ataque: Quando o Runtime Decide pelo Atacante". *R0Z*, 2026. https://renansj.dev/inferencia-de-tipo
-
-```bibtex
-@misc{inferencia-de-tipo,
-  author = {Renan Zapelini},
-  title  = {Inferência de Tipo é Superfície de Ataque: Quando o Runtime Decide pelo Atacante},
-  year   = {2026},
-  url    = {https://renansj.dev/inferencia-de-tipo}
-}
-```
