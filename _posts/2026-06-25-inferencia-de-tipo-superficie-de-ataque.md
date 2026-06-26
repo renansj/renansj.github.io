@@ -110,7 +110,7 @@ function verificarToken(tokenEnviado, tokenReal) {
 }
 ```
 
-Parece inofensivo até você perceber o que acontece quando `tokenReal` é `0` (por exemplo, um índice, um ID que veio como número) e o atacante manda `tokenEnviado = false` ou `tokenEnviado = ""`. A coerção transforma a comparação em verdadeira.
+Parece inofensivo até você perceber o que acontece quando `tokenReal` é `0` (por exemplo, um índice, um ID que veio como número) e o atacante manda `tokenEnviado = false` ou `tokenEnviado = ""`. A coerção transforma a comparação em verdadeira. Lembrando que sobre HTTP o input chega como string, então o caso prático é mandar a string vazia (`tokenEnviado = ""`, que coage para `0`) ou um body JSON com um boolean de fato (`false`), conforme o que o handler aceitar.
 
 Em termos de Hoare, o desenvolvedor escreveu:
 
@@ -158,6 +158,8 @@ console.log(usuarioQualquer.isAdmin);  // true
 
 O que aconteceu? A string `"__proto__"`, para o desenvolvedor, era só mais uma chave de dados. Para o runtime do JavaScript, ela é a referência ao protótipo do objeto. O sistema **inferiu** um significado especial a partir de um dado que o atacante controla. A pré-condição "as chaves do input são apenas nomes de propriedade comuns" é falsa, e o desenvolvedor nem sabia que essa era uma pré-condição.
 
+Repare numa sutileza importante, porque ela volta na conclusão: o JSON aqui não carrega tipo nenhum. `JSON.parse` produz um objeto de dados puro, com `__proto__` como uma chave de string comum. A inferência perigosa não está no formato, está no **consumidor**: é o `merge` que, ao atribuir `destino[chave]`, faz o runtime reinterpretar `"__proto__"` como acesso ao protótipo. O formato é inocente; quem infere é o código que consome a chave. Por isso JSON continua na ponta segura do espectro, e ainda assim prototype pollution existe.
+
 A cadeia de impacto vai longe. Se mais adiante o código faz algo como:
 
 ```javascript
@@ -181,8 +183,8 @@ PHP fez as mesmas escolhas de JavaScript e adicionou algumas próprias. O result
 <?php
 // Magic hashes: o problema dos hashes que "parecem" notação científica
 var_dump("0e123" == "0e456");   // true
-// Por que? PHP vê duas strings que parecem números em notação
-// cientifica (0 elevado a algo = 0), entao compara 0 == 0.
+// Por quê? PHP vê duas strings que parecem números em notação
+// científica (0 elevado a algo = 0), então compara 0 == 0.
 
 // Onde isso explode:
 $senhaHashArmazenada = "0e462097431906509019562988736854"; // md5 de uma senha
@@ -197,6 +199,8 @@ if ($hashTentativa == $senhaHashArmazenada) {  // == solto
 ```
 
 Existem strings conhecidas cujo MD5 tem o formato `0e` seguido apenas de dígitos. Mandando uma delas, o atacante faz `0 == 0` e passa pela autenticação sem nunca acertar a senha.
+
+Uma nota de versão importante, porque isso costuma gerar dúvida: o PHP 8 mudou a comparação solta entre número e string não-numérica (`0 == "foo"` virou `false`, era `true` no PHP 7). Mas magic hashes continuam funcionando no PHP 8, porque ali a comparação é entre duas strings que **ambas** parecem número (`"0e123" == "0e456"`), e nesse caso o PHP ainda as converte para número antes de comparar. O bypass de autenticação por magic hash não envelheceu.
 
 A pré-condição que o desenvolvedor escreveu:
 
@@ -221,7 +225,7 @@ if (strcmp($_GET['senha'], $senhaReal) == 0) {
     autenticar();
 }
 // Atacante manda: ?senha[]=qualquercoisa
-// strcmp(array, string) retorna NULL em versoes antigas
+// strcmp(array, string) retorna NULL em versões antigas
 // NULL == 0 é true. Bypass.
 ?>
 ```
@@ -271,8 +275,8 @@ args: ['id > /tmp/pwned']
 
 yaml.load(payload, Loader=yaml.Loader)  # executa o comando
 
-# A versao segura recusa instanciar tipos arbitrarios:
-yaml.safe_load(payload)  # levanta erro, nao executa nada
+# A versão segura recusa instanciar tipos arbitrários:
+yaml.safe_load(payload)  # levanta erro, não executa nada
 ```
 
 A tag `!!python/object/apply` é o YAML dando ao atacante a chave para dizer "instancie este tipo Python e aplique estes argumentos". `yaml.load` infere e obedece. `yaml.safe_load` se recusa a inferir tipos arbitrários, e por isso é seguro. A diferença entre os dois é exatamente a diferença entre "deixo o input escolher o tipo" e "fixo os tipos permitidos".
@@ -300,7 +304,7 @@ A pré-condição:
 Jackson, a biblioteca de JSON mais usada em Java, reintroduz o mesmo problema quando configurada para aceitar tipo via input:
 
 ```java
-// Configuracao venenosa: deixa o JSON dizer qual classe instanciar
+// Configuração venenosa: deixa o JSON dizer qual classe instanciar
 ObjectMapper mapper = new ObjectMapper();
 mapper.enableDefaultTyping();  // <- aqui mora o perigo
 
@@ -316,7 +320,7 @@ mapper.enableDefaultTyping();  // <- aqui mora o perigo
 .NET repete a história com `BinaryFormatter` e com `TypeNameHandling` no Newtonsoft.Json.
 
 ```csharp
-// Veneno classico do .NET
+// Veneno clássico do .NET
 JsonConvert.DeserializeObject<Conta>(inputDoAtacante, new JsonSerializerSettings
 {
     TypeNameHandling = TypeNameHandling.All  // <- o input pode dizer o tipo
@@ -373,7 +377,7 @@ Formalizando o espectro de risco:
 
 Quanto mais para baixo na tabela, mais decisões o input controla, e mais a pré-condição "isso é só dado seguro" se torna inverificável.
 
-Isso explica um fato que parece misterioso: por que linguagens como Rust e Go têm menos classes inteiras de vulnerabilidade do que PHP e JavaScript. Não é que os programadores sejam melhores. É que a linguagem não delega ao input a decisão sobre tipo. A superfície simplesmente não existe.
+Isso explica um fato que parece misterioso: por que linguagens como Rust e Go têm menos classes inteiras de vulnerabilidade do que PHP e JavaScript. Não é que os programadores sejam melhores. É que a linguagem não delega ao input a decisão sobre tipo **por padrão**. A classe de coerção implícita (`0 == "0"`) simplesmente não existe nessas linguagens. A ressalva honesta: a desserialização com tipo controlado pelo atacante pode ser reintroduzida por escolha de biblioteca, como `encoding/gob` ou unmarshalling para `interface{}` em Go, e `serde` com configuração polimórfica em Rust. A diferença é que ali isso é uma decisão explícita do desenvolvedor, não o comportamento default da linguagem.
 
 E explica por que essas vulns reaparecem década após década. A indústria trata cada CVE como um incidente isolado: corrige o `__proto__` aqui, marca o `BinaryFormatter` como obsoleto ali. Mas a causa não é cada caso individual. É a decisão de design de deixar o input dirigir a inferência. Enquanto essa decisão existir, vão surgir novos casos.
 
@@ -419,7 +423,7 @@ Faça o taint tracking: source (parâmetro HTTP, body JSON, cookie, header, mens
 
 **3. A inferência acontece antes ou depois da validação?**
 
-Esse é o ponto mais sutil e mais lucrativo. Muitos sistemas validam um tipo e usam outro. Validam a string, mas desserializam o objeto. Checam o IP, mas seguem o redirect. Se a validação olha para uma coisa e a execução olha para outra, o gap entre as duas é a sua entrada (hehe, sorry).
+Esse é o ponto mais sutil e mais lucrativo. Muitos sistemas validam um tipo e usam outro. Validam a string, mas desserializam o objeto. Checam o IP, mas seguem o redirect. Se a validação olha para uma coisa e a execução olha para outra, o gap entre as duas é, honestamente, onde eu mais acho bug.
 
 Se as respostas forem "aqui", "sim" e "antes", você provavelmente achou uma vulnerabilidade, mesmo que ela ainda não tenha nome no OWASP.
 
@@ -442,7 +446,7 @@ pickle.loads(entrada)
 
 # Bom: o tipo é fixo, o input é só dado
 yaml.safe_load(entrada)
-json.loads(entrada)  # JSON puro nao carrega tipo
+json.loads(entrada)  # JSON puro não carrega tipo
 ```
 
 ```java
@@ -458,7 +462,7 @@ Conta conta = mapper.readValue(entrada, Conta.class);
 // Ruim
 TypeNameHandling = TypeNameHandling.All
 
-// Bom: o padrao, que nao deixa o input escolher o tipo
+// Bom: o padrão, que não deixa o input escolher o tipo
 TypeNameHandling = TypeNameHandling.None
 ```
 
@@ -470,10 +474,10 @@ Em linguagens com coerção, nunca compare valores sensíveis com o operador sol
 // Ruim
 if (tokenEnviado == tokenReal)
 
-// Bom: compara identidade, sem coercao
+// Bom: compara identidade, sem coerção
 if (tokenEnviado === tokenReal)
 
-// Melhor ainda para segredos: comparacao constant-time
+// Melhor ainda para segredos: comparação constant-time
 const crypto = require("crypto");
 if (crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b)))
 ```
@@ -494,16 +498,16 @@ if (hash_equals($hashConhecido, $hashTentativa))
 A validação tem que olhar para a mesma coisa que a execução vai usar. Schema antes de desserializar, allowlist de campos antes de fazer binding.
 
 ```python
-# Exemplo com schema explicito (pydantic)
+# Exemplo com schema explícito (pydantic)
 from pydantic import BaseModel
 
 class Conta(BaseModel):
     nome: str
     idade: int
-    # Campos nao declarados sao rejeitados.
-    # O input nao consegue introduzir estrutura inesperada.
+    # Campos não declarados são rejeitados.
+    # O input não consegue introduzir estrutura inesperada.
 
-conta = Conta.model_validate_json(entrada)  # valida o que sera usado
+conta = Conta.model_validate_json(entrada)  # valida o que será usado
 ```
 
 ### 4. Bloqueie chaves perigosas em merges (JS)
@@ -516,7 +520,7 @@ const CHAVES_PROIBIDAS = ["__proto__", "constructor", "prototype"];
 function mergeSeguro(destino, fonte) {
   for (let chave in fonte) {
     if (CHAVES_PROIBIDAS.includes(chave)) {
-      continue;  // ignora chaves que poluem o prototipo
+      continue;  // ignora chaves que poluem o protótipo
     }
     // ... resto do merge
   }
@@ -524,8 +528,8 @@ function mergeSeguro(destino, fonte) {
 }
 
 // Alternativas estruturais:
-// - Use Map em vez de objeto literal (Map nao tem prototipo poluivel)
-// - Use Object.create(null) para objetos sem prototipo
+// - Use Map em vez de objeto literal (Map não tem protótipo poluível)
+// - Use Object.create(null) para objetos sem protótipo
 // - Congele Object.prototype com Object.freeze em runtimes que permitem
 ```
 
@@ -539,7 +543,7 @@ mapper.activateDefaultTyping(
     BasicPolymorphicTypeValidator.builder()
         .allowIfSubType(Pagamento.class)
         .allowIfSubType(Reembolso.class)
-        .build()  // so esses dois tipos, nada mais
+        .build()  // só esses dois tipos, nada mais
 );
 ```
 
@@ -557,7 +561,7 @@ O que vale guardar deste post:
 * Existe uma família inteira de vulns que compartilham a mesma causa: o sistema decide tipo, estrutura ou comportamento a partir de input controlável. Prototype pollution, type juggling, desserialização insegura, mass assignment e parser differentials são a mesma doença vista de ângulos diferentes.
 * Quanto mais expressivo o formato de input, menos verificável é a pré-condição "isso é só dado". JSON puro é seguro. Pickle e BinaryFormatter são inseguros por design, não por implementação.
 * A defesa não é "validar melhor", é remover a inferência: fixe o tipo, compare com identidade, valide contra schema rígido, bloqueie o vocabulário perigoso.
-* Linguagens fortemente tipadas não têm classes inteiras dessas vulns não porque seus programadores são melhores, mas porque não delegam ao input a decisão sobre tipo. A superfície não existe.
+* Linguagens fortemente tipadas não têm classes inteiras dessas vulns não porque seus programadores são melhores, mas porque não delegam ao input a decisão sobre tipo por padrão. A superfície de coerção não existe, e a de desserialização polimórfica só aparece se você optar por ela explicitamente.
 
 Se você quer internalizar isso, pega um código em uma linguagem com coerção ou desserialização e faça o exercício das três perguntas: onde o tipo é inferido, quem controla o input, e a validação olha para a mesma coisa que a execução. Em algumas semanas isso vira automático, e você vai começar a enxergar a causa onde os scanners só veem sintoma.
 
@@ -574,7 +578,7 @@ A indústria trata CVE como incidente. Pesquisador enxerga o padrão gerador. A 
 
 * C. A. R. Hoare, "An Axiomatic Basis for Computer Programming", Communications of the ACM, 1969
 * Edsger W. Dijkstra, "A Discipline of Programming", 1976 (weakest preconditions)
-* Olivier Arteau, "Prototype Pollution and how to prevent it", 2018
+* Olivier Arteau, "Prototype Pollution Attack in NodeJS Application", NorthSec 2018
 * Chris Frohoff e Gabriel Lawrence, "Marshalling Pickles" (ysoserial), AppSecCali 2015
 * Alvaro Munoz e Oleksandr Mirosh, "Friday the 13th: JSON Attacks", BlackHat USA 2017
 * OWASP, "Deserialization Cheat Sheet"
